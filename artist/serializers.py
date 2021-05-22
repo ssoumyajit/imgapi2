@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Artist, ArtistData, Highlights, Journey
+from .models import Artist, ArtistData, Highlights, Journey, Work
 from user.models import User
 
 
@@ -54,5 +54,13 @@ class JourneySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Journey
+        fields = "__all__"
+
+
+class WorkSerializers(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+
+    class Meta:
+        model = Work
         fields = "__all__"
 # ------------------------------------------------------------

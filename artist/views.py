@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Artist, ArtistData, Highlights, Journey
-from .serializers import ArtistSerializers, ArtistDataSerializers, HighlightsSerializers, JourneySerializers
+from .models import Artist, ArtistData, Highlights, Journey, Work
+from .serializers import ArtistSerializers, ArtistDataSerializers, HighlightsSerializers, JourneySerializers, WorkSerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import permissions
 from rest_framework import filters
@@ -14,7 +14,6 @@ class ArtistListCreateViews(generics.ListCreateAPIView):
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
-
 
     # filtering which artists to be shown
     # may be filter using dance style, teachers later
@@ -43,7 +42,6 @@ class ArtistRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
     """
-    
 
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)   # uses the id field of user object, it seems.
@@ -120,6 +118,31 @@ class JourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
 
     # lookup_field - using instance id.
+
+    def perform_create(self, serializer):
+        serializer.save(username=self.request.user)
+
+
+class WorkListCreateViews(generics.ListCreateAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        """
+        filtering against queryset
+        """
+        queryset = Work.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is not None:
+            queryset = queryset.filter(username__name=username)
+        return queryset
+
+
+class WorkRUDViews(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
 
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)

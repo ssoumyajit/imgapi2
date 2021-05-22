@@ -122,6 +122,23 @@ class Journey(models.Model):
         return self.jodate
 
 
+class Work(models.Model):
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    wtitle = models.CharField(max_length=255, default="", blank=False)
+    wflier = models.ImageField(default="", upload_to="works/", blank=False)
+    wdate = models.DateField(null=True, blank=True)
+    wlocation = models.CharField(max_length=255, default="", blank=False)
+    wupcoming = models.BooleanField(default=False)
+
+    def save(self, *args, ** kwargs):
+        super(Work, self).save(*args, **kwargs)
+        wflier = Image.open(self.wflier.path)
+        wflier.thumbnail((240, 180), Image.ANTIALIAS)
+        wflier.save(self.wflier.path, optimize=True, quality=90)
+
+    def __str__(self):
+        return self.wdate
+
 # null = True means, when u do not put anything in the field , it will be set NULL in the database
 # blank = True/False   related only to the forms
 # default = None, default=None does not allow or disallow a None value to be used. It simply tells #
