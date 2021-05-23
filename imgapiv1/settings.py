@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -167,3 +168,6 @@ AUTH_USER_MODEL = 'user.User'  # 'nameOfApp.Model'
 # https://medium.com/swlh/searching-in-django-rest-framework-45aad62e7782
 
 COVER_THUMBNAIL_SIZE = (200, 100)
+django_heroku.settings(locals())
+
+
