@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Artist, ArtistData, Highlights, Journey, Work
+from .models import Artist, ArtistData, Journey, Work
 from user.models import User
 
 
@@ -39,14 +39,6 @@ class ArtistDataSerializers(serializers.ModelSerializer):
         model = ArtistData
         fields = ['username', 'style', 'quote', 'introduction', 'crew', 'ig', 'fb', 'site', 'gallery1', 'gallery2',
                   'gallery2', 'gallery3', 'gallery4']
-
-
-class HighlightsSerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
-
-    class Meta:
-        model = Highlights
-        fields = "__all__"
 
 
 class JourneySerializers(serializers.ModelSerializer):

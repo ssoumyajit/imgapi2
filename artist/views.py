@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Artist, ArtistData, Highlights, Journey, Work
-from .serializers import ArtistSerializers, ArtistDataSerializers, HighlightsSerializers, JourneySerializers, WorkSerializers
+from .models import Artist, ArtistData, Journey, Work
+from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, WorkSerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import permissions
 from rest_framework import filters
@@ -63,36 +63,6 @@ class ArtistDataRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView
         serializer.save(username=self.request.user)
 
 
-class HighlightsListCreateViews(generics.ListCreateAPIView):
-    queryset = Highlights.objects.all()
-    serializer_class = HighlightsSerializers
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['username__name']
-    # authentication_classes = (JWTAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    # just use explicit queryset n filter
-
-    def get_queryset(self):
-        """
-        filtering against queryset
-        """
-        queryset = Highlights.objects.all()
-        username = self.request.query_params.get('username', None)
-        if username is not None:
-            queryset = queryset.filter(username__name=username)
-        return queryset
-
-
-class HighlightsRUDViews(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Highlights.objects.all()
-    serializer_class = HighlightsSerializers
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
-    # lookup_field - using instance id.
-
-    def perform_create(self, serializer):
-        serializer.save(username=self.request.user)
-
-
 class JourneyListCreateViews(generics.ListCreateAPIView):
     queryset = Journey.objects.all()
     serializer_class = JourneySerializers
@@ -109,6 +79,7 @@ class JourneyListCreateViews(generics.ListCreateAPIView):
         username = self.request.query_params.get('username', None)
         if username is not None:
             queryset = queryset.filter(username__name=username)
+            queryset = queryset.filter(isprivate=False)
         return queryset
 
 

@@ -82,27 +82,6 @@ class ArtistData(models.Model):
     """
 
 
-class Highlights(models.Model):
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
-    hicontext = models.CharField(max_length=255, default="", blank=False)  # must
-    hiphoto = models.ImageField(default="", upload_to="work/", blank=False)  # must
-    hidate = models.DateField(null=True, blank=True)  # blank is for admin, null is for db.
-    hicontent = models.TextField(default="", blank=True)
-    hilink = models.URLField(max_length=200, default="",  blank=True)
-    # add 5 photos to really talk about this highlight of yours.
-    # make 2 different serializers where the 2nd one will be used to
-    # fetch these extra photos only when retrieved... that means when the user clicks on this card.
-
-    def save(self, *args, **kwargs):
-        super(Highlights, self).save(*args, **kwargs)
-        photo = Image.open(self.hiphoto.path)
-        photo.thumbnail((240, 180), Image.ANTIALIAS)
-        photo.save(self.hiphoto.path, optimize=True, quality=90)
-
-    def __str__(self):
-        return self.hidate
-
-
 class Journey(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
     joevent = models.CharField(max_length=255, default="", blank=False)  # must
@@ -111,6 +90,7 @@ class Journey(models.Model):
     jocontent = models.TextField(default="", blank=True)
     jolink = models.URLField(max_length=255, default="", blank=True)
     ishighlight = models.BooleanField(default=False)
+    isprivate = models.BooleanField(default=False)
 
     def save(self, *args, ** kwargs):
         super(Journey, self).save(*args, **kwargs)
