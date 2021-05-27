@@ -21,6 +21,7 @@ class IsOwnerOrReadonly(permissions.BasePermission):
         return obj.username == request.user
 
 
+# was working on private chat between teacher and student..... confirm once !!
 class MessagePermissionBeforeCreate(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
@@ -28,7 +29,7 @@ class MessagePermissionBeforeCreate(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.username == request.user | obj.teacher == request.user
-        return request.user == obj.shareid.username | request.user == obj.shareid.teacher # might need to get this object
+        return request.user == obj.shareid.username | request.user == obj.shareid.teacher  # might need to get this object
     # in read mode beforehand coz it is all happening before touching the database
     # depth = 1 to get it or Modified Serializer.
 

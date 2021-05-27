@@ -46,6 +46,7 @@ class CommentViewSets(viewsets.ModelViewSet):
     # authentication_classes = (JWTAuthentication,)
     # permission_classes = (IsAuthenticatedOrReadOnly,)
 
+
 class SharingMessageViewSets(viewsets.ModelViewSet):
     queryset = SharingMessage.objects.all()
     serializer_class = SharingMessageSerializers

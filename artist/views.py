@@ -1,13 +1,13 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from .models import Artist, ArtistData, Journey, Work
 from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, WorkSerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import permissions
-from rest_framework import filters
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from permissions import IsOwnerOrReadonly
 from rest_framework import generics
 # from rest_framework.parsers import FormParser, MultiPartParser
+from django.db.models import Q
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 class ArtistListCreateViews(generics.ListCreateAPIView):
@@ -63,6 +63,19 @@ class ArtistDataRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView
         serializer.save(username=self.request.user)
 
 
+# search an artist functionality
+@api_view(['POST'])
+def search(request):
+    query = request.data.get('query', '')
+
+    if query:
+        artists = Artist.objects.filter(Q(username__icontains=query) | Q(artist_name__icontains=query))
+        serializer = ArtistSerializers(artists, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({"artists": []})
+
+
 class JourneyListCreateViews(generics.ListCreateAPIView):
     queryset = Journey.objects.all()
     serializer_class = JourneySerializers
@@ -70,17 +83,38 @@ class JourneyListCreateViews(generics.ListCreateAPIView):
     # search_fields = ['username__name']
     # authentication_classes = (JWTAuthentication,)  # JWTAuthentication & SessionAuth are different...really.
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    
+
+    # feature for keeping a post private/public.
     def get_queryset(self):
         """
         filtering against queryset
         """
         queryset = Journey.objects.all()
         username = self.request.query_params.get('username', None)
+
+        if username is not None:
+
+            # logic to filter based on normal user or loggedIn user
+            queryset = queryset.filter(username__name=username)
+            if username == self.request.user.name:
+                return queryset
+            else:
+                queryset = queryset.filter(isprivate=False)
+                return queryset
+        return None
+
+
+'''
         if username is not None:
             queryset = queryset.filter(username__name=username)
-            queryset = queryset.filter(isprivate=False)
-        return queryset
+            # logic to filter based on normal user or loggedIn user
+            if username == self.request.user:
+                return queryset
+            else:
+                queryset = queryset.filter(isprivate=False)
+                return queryset
+        return None
+'''
 
 
 class JourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
@@ -92,6 +126,8 @@ class JourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)
+
+    # def perform_update ??
 
 
 class WorkListCreateViews(generics.ListCreateAPIView):
