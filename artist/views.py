@@ -1,7 +1,7 @@
 # from django.shortcuts import render
 from .models import Artist, ArtistData, Journey, Work
 from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, WorkSerializers
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from permissions import IsOwnerOrReadonly
 from rest_framework import generics
 # from rest_framework.parsers import FormParser, MultiPartParser
@@ -95,13 +95,14 @@ class JourneyListCreateViews(generics.ListCreateAPIView):
         if username is not None:
 
             # logic to filter based on normal user or loggedIn user
-            queryset = queryset.filter(username__name=username)
-            if username == self.request.user.name:
+            if self.request.user.is_authenticated and username == self.request.user.name:
+                queryset = queryset.filter(username__name=username)
                 return queryset
             else:
+                queryset = queryset.filter(username__name=username)
                 queryset = queryset.filter(isprivate=False)
                 return queryset
-        return None
+        return queryset
 
 
 '''
