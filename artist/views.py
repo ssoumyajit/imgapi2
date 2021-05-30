@@ -6,8 +6,8 @@ from permissions import IsOwnerOrReadonly
 from rest_framework import generics
 # from rest_framework.parsers import FormParser, MultiPartParser
 from django.db.models import Q
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
 
 
 class ArtistListCreateViews(generics.ListCreateAPIView):
@@ -15,6 +15,18 @@ class ArtistListCreateViews(generics.ListCreateAPIView):
     serializer_class = ArtistSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+    def get_queryset(self):
+        """
+        filtering against queryset
+        """
+        queryset = Artist.objects.all()
+        query = self.request.query_params.get('query', None)
+
+        if query is not None:
+            queryset = queryset.filter(Q(username__name__icontains=query) | Q(artist_name__icontains=query))
+            return queryset
+
+        return queryset
     # filtering which artists to be shown
     # may be filter using dance style, teachers later
     """
@@ -63,6 +75,7 @@ class ArtistDataRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView
         serializer.save(username=self.request.user)
 
 
+'''
 # search an artist functionality
 @api_view(['POST'])
 def search(request):
@@ -74,6 +87,7 @@ def search(request):
         return Response(serializer.data)
     else:
         return Response({"artists": []})
+'''
 
 
 class JourneyListCreateViews(generics.ListCreateAPIView):
@@ -103,19 +117,6 @@ class JourneyListCreateViews(generics.ListCreateAPIView):
                 queryset = queryset.filter(isprivate=False)
                 return queryset
         return queryset
-
-
-'''
-        if username is not None:
-            queryset = queryset.filter(username__name=username)
-            # logic to filter based on normal user or loggedIn user
-            if username == self.request.user:
-                return queryset
-            else:
-                queryset = queryset.filter(isprivate=False)
-                return queryset
-        return None
-'''
 
 
 class JourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
