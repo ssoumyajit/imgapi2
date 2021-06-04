@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Artist, ArtistData, Journey, Work
+from .models import STYLES_CHOICES
 from user.models import User
 
 
@@ -32,13 +33,15 @@ class ArtistSerializers(serializers.ModelSerializer):
     '''
 
 
-class ArtistDataSerializers(serializers.ModelSerializer):
+class ArtistDataSerializers(serializers.HyperlinkedModelSerializer):
     username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    styles = serializers.MultipleChoiceField(choices=STYLES_CHOICES, allow_blank=True)
+    # source='get_styles_display'
 
     class Meta:
         model = ArtistData
         fields = ['username', 'style', 'quote', 'introduction', 'crew', 'ig', 'fb', 'site', 'gallery1', 'gallery2',
-                  'gallery2', 'gallery3', 'gallery4']
+                  'gallery2', 'gallery3', 'gallery4', 'styles', 'vid1', 'vid2', 'vid3', 'vid4']
 
 
 class JourneySerializers(serializers.ModelSerializer):

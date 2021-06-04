@@ -1,4 +1,5 @@
 from django.db import models
+from multiselectfield import MultiSelectField
 from django.conf import settings
 from django_countries.fields import CountryField
 import time
@@ -10,6 +11,15 @@ from PIL import Image
 from io import BytesIO
 import os.path
 from imgapiv1.settings import COVER_THUMBNAIL_SIZE
+
+STYLES_CHOICES = ((1, 'HIPHOP'),
+                 (2, 'HOUSE'),
+                 (3, 'POPPING'),
+                 (4, 'LOCKING'),
+                 (5, 'BREAKING'),
+                 (6, 'EXPERIMENTAL'),
+                 (7, 'OTHER'),
+                 (8, 'STILL EXPLORING'))
 
 
 def scramble_uploaded_filename(file):
@@ -62,6 +72,7 @@ class Artist(models.Model):
 class ArtistData(models.Model):
     username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="artistdata")
     style = models.CharField(max_length=15, default="", blank=True)
+    styles = MultiSelectField(choices=STYLES_CHOICES, default='')
     quote = models.CharField(max_length=255, default="", blank=True)
     introduction = models.TextField(default="", blank=True)
     crew = models.CharField(max_length=255, default="", blank=True)
@@ -72,6 +83,10 @@ class ArtistData(models.Model):
     gallery2 = models.ImageField(null=True, blank=True, upload_to='gallery/')
     gallery3 = models.ImageField(null=True, blank=True, upload_to='gallery/')
     gallery4 = models.ImageField(null=True, blank=True, upload_to='gallery/')
+    vid1 = models.URLField(max_length=255, default="", blank=True)
+    vid2 = models.URLField(max_length=255, default="", blank=True)
+    vid3 = models.URLField(max_length=255, default="", blank=True)
+    vid4 = models.URLField(max_length=255, default="", blank=True)
 
     """
         def save(self, *args, **kwargs):
