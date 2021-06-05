@@ -5,6 +5,12 @@ from django_countries.fields import CountryField
 import time
 import uuid
 
+# for testing artist creation when the user is created using signals.
+# from django.core.signals import request_finished
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from user.models import User
+
 # for image manipulations
 from django.core.files.base import ContentFile
 from PIL import Image
@@ -39,34 +45,38 @@ class Artist(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.make_thumbnail():
-            raise Exception('could not create thumbnail, is the FileType valid ?')
+            # try except else n then raise exception
+            # raise Exception('could not create thumbnail, is the FileType valid ?')
+            pass
         super(Artist, self).save(*args, **kwargs)
 
     def make_thumbnail(self):
-        image = Image.open(self.cover)
-        image.thumbnail(COVER_THUMBNAIL_SIZE, Image.ANTIALIAS)
-        thumbnail_name, thumbnail_extension = os.path.splitext(self.cover.name)
-        thumbnail_extension = thumbnail_extension.lower()
-        thumbnail_filename = thumbnail_name + "_thumb" + thumbnail_extension
+        if self.cover:
 
-        if thumbnail_extension in ['.jpg', '.jpeg']:
-            filetype = 'JPEG'
-        elif thumbnail_extension == '.png':
-            filetype = 'PNG'
-        else:
-            return False
+            image = Image.open(self.cover)
+            image.thumbnail(COVER_THUMBNAIL_SIZE, Image.ANTIALIAS)
+            thumbnail_name, thumbnail_extension = os.path.splitext(self.cover.name)
+            thumbnail_extension = thumbnail_extension.lower()
+            thumbnail_filename = thumbnail_name + "_thumb" + thumbnail_extension
 
-        # save the thumbnail in memory file as StringIO
-        temp_thumbnail = BytesIO()
-        image.save(temp_thumbnail, filetype)
-        temp_thumbnail.seek(0)
+            if thumbnail_extension in ['.jpg', '.jpeg']:
+                filetype = 'JPEG'
+            elif thumbnail_extension == '.png':
+                filetype = 'PNG'
+            else:
+                return False
 
-        # Load a ContentFile into the thumbnail field so it gets saved.
-        # set save=False, otherwise it will run in an infinite loop
-        self.thumb.save(thumbnail_filename, ContentFile(temp_thumbnail.read()), save=False)
-        temp_thumbnail.close()
-        return True
-        # https://stackoverflow.com/questions/23922289/django-pil-save-thumbnail-version-right-when-image-is-uploaded
+            # save the thumbnail in memory file as StringIO
+            temp_thumbnail = BytesIO()
+            image.save(temp_thumbnail, filetype)
+            temp_thumbnail.seek(0)
+
+            # Load a ContentFile into the thumbnail field so it gets saved.
+            # set save=False, otherwise it will run in an infinite loop
+            self.thumb.save(thumbnail_filename, ContentFile(temp_thumbnail.read()), save=False)
+            temp_thumbnail.close()
+            return True
+            # https://stackoverflow.com/questions/23922289/django-pil-save-thumbnail-version-right-when-image-is-uploaded
 
 
 class ArtistData(models.Model):
@@ -95,6 +105,15 @@ class ArtistData(models.Model):
         gallery1.thumbnail((240, 240), Image.ANTIALIAS)
         gallery1.save(self.gallery1.path, optimize=True, quality=90)
     """
+
+
+@receiver(post_save, sender=User)
+def create_artist_artistdata(sender, instance, created, **kwargs):
+    if created:
+        Artist.objects.create(username=instance)
+        ArtistData.objects.create(username=instance)
+
+# https://stackoverflow.com/questions/33659994/django-rest-framework-create-user-and-user-profile
 
 
 class Journey(models.Model):
