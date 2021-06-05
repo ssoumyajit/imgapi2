@@ -2,12 +2,13 @@ from rest_framework import serializers
 from .models import Artist, ArtistData, Journey, Work
 from .models import STYLES_CHOICES
 from user.models import User
+from django_countries.serializers import CountryFieldMixin
 
 
 # from portfolio import settings
 
 
-class ArtistSerializers(serializers.ModelSerializer):
+class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
     # overridden username here
     # this is where the bug is, so don can patch on Batala while updating in postman
     # username = serializers.ReadOnlyField(source='username.name')
@@ -33,7 +34,7 @@ class ArtistSerializers(serializers.ModelSerializer):
     '''
 
 
-class ArtistDataSerializers(serializers.HyperlinkedModelSerializer):
+class ArtistDataSerializers(serializers.ModelSerializer):
     username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
     styles = serializers.MultipleChoiceField(choices=STYLES_CHOICES, allow_blank=True)
     # source='get_styles_display'
