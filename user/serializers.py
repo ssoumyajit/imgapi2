@@ -1,25 +1,23 @@
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework.serializers import ModelSerializer
-from .models import User
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django_countries.serializers import CountryFieldMixin
-from django_countries.serializer_fields import CountryField
 
 
 # https://github.com/SmileyChris/django-countries
 # https://github.com/SmileyChris/django-countries/issues/106
 # https://stackoverflow.com/questions/40669313/django-countries-in-django-rest-framework
 
-class UserSerializer(ModelSerializer):
+
+class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
     """ serializer for users object"""
 
     # country = CountryField()
     class Meta:
         model = get_user_model()  # return the use model that is active in this project
         # model = User
-        fields = ['email', 'password', 'name']
+        fields = ['email', 'password', 'name', 'cover', 'country', 'artist_name']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):

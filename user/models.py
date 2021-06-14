@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
-# from django_countries.fields import CountryField
+from django_countries.fields import CountryField
 
 
 # a manager to create user and superuser from user models
@@ -34,7 +34,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    # country = CountryField(default = "IN")
+
+    cover = models.ImageField(default="", upload_to="covers/", blank=True)
+    country = CountryField(default="", blank=True)
+    artist_name = models.CharField(max_length=255, default="", blank=True) 
 
     objects = UserManager()  # creates a new user manager for our object
     USERNAME_FIELD = 'email'

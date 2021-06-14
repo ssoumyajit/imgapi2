@@ -3,8 +3,6 @@ from .models import Artist, ArtistData, Journey, Work
 from .models import STYLES_CHOICES
 from user.models import User
 from django_countries.serializers import CountryFieldMixin
-
-
 # from portfolio import settings
 
 
@@ -22,6 +20,7 @@ class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
         # extra_kwargs = {
         # 'url': {'lookup_field': 'owner'}
         # }
+    # for partial updates either use partial = True, or overwrite init method of serializer IN VIEW CODE.
 
     '''
     def __init__(self, *args, **kwargs):
@@ -59,4 +58,6 @@ class WorkSerializers(serializers.ModelSerializer):
     class Meta:
         model = Work
         fields = "__all__"
+
+
 # ------------------------------------------------------------

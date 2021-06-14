@@ -49,6 +49,8 @@ class ArtistRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView):
         kwargs['partial'] = True
         super(ArtistSerializers, self).__init__(*args, **kwargs)
     """
+    # This above piece of code has already been implemented in UPDATEMIXIN.
+    # https://stackoverflow.com/questions/41110742/django-rest-framework-partial-update
     """
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True

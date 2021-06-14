@@ -143,6 +143,7 @@ class Work(models.Model):
     wdate = models.DateField(null=True, blank=True)
     wlocation = models.CharField(max_length=255, default="", blank=False)
     wupcoming = models.BooleanField(default=False)
+    test = models.CharField(max_length=25, null=True)
 
     def save(self, *args, ** kwargs):
         super(Work, self).save(*args, **kwargs)

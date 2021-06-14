@@ -9,11 +9,13 @@ from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
 from rest_framework import generics, authentication, permissions
+from .models import User
 
 
-class CreateUserView(CreateAPIView):
+class ListCreateUserView(generics.ListCreateAPIView):
     """create a new user in the system"""
     serializer_class = UserSerializer
+    queryset = User.objects.all()
 
 
 class CustomObtainAuthToken(TokenObtainPairView):
