@@ -36,7 +36,7 @@ class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
 
 class ArtistDataSerializers(serializers.ModelSerializer):
     username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
-    styles = serializers.MultipleChoiceField(choices=STYLES_CHOICES, allow_blank=True)
+    # styles = serializers.MultipleChoiceField(choices=STYLES_CHOICES, allow_blank=True)
     # source='get_styles_display'
 
     class Meta:
