@@ -42,7 +42,7 @@ class ArtistDataSerializers(serializers.ModelSerializer):
     class Meta:
         model = ArtistData
         fields = ['username', 'style', 'quote', 'introduction', 'crew', 'ig', 'fb', 'site', 'gallery1', 'gallery2',
-                  'gallery2', 'gallery3', 'gallery4', 'styles', 'vid1', 'vid2', 'vid3', 'vid4']
+                  'gallery2', 'gallery3', 'gallery4', 'vid1', 'vid2', 'vid3', 'vid4']
 
 
 class JourneySerializers(serializers.ModelSerializer):

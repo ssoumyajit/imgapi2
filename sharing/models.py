@@ -19,11 +19,12 @@ class Sharing(models.Model):
     s_teacher_country = CountryField(default="", blank=True)
     s_student_country = CountryField(default="", blank=True)
     s_photo = models.ImageField(default="", upload_to="sharing/")
-    s_appreciation = models.CharField(max_length=160, default="")  # 1 line = 8 words, 20 lines to cover up the image
+    s_appreciation = models.TextField(default="")  # 1 line = 8 words, 20 lines to cover up the image
     s_video_talk = models.FileField(default="", upload_to="talk/")
     s_video_dance = models.FileField(default="", upload_to="dance/")
     s_date = models.DateField(auto_now=True)  # keeping track of the user's posting time.
-    s_location = models.CharField(max_length=30)
+    s_location = models.CharField(max_length=255,)
+    s_teacher_video = models.URLField(default="", max_length=255, blank=True)
 
     # voters_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = "votes")
 

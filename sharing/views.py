@@ -1,13 +1,15 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from .models import Sharing, Comments, LikesToSharing, SharingMessage
 from rest_framework import viewsets
 from .serializers import SharingSerializers, CommentSerializers, LikesToSharingSerializers, SharingMessageSerializers
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import generics
+from django.db.models import Q
+from permissions import IsOwnerOrReadonly
 
-
+'''
 class SharingViewSets(viewsets.ModelViewSet):
     queryset = Sharing.objects.all()
     serializer_class = SharingSerializers
@@ -15,6 +17,32 @@ class SharingViewSets(viewsets.ModelViewSet):
     search_fields = ['teacher__name', 'username__name']
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
+'''
+
+
+class SharingListCreateViews(generics.ListCreateAPIView):
+    queryset = Sharing.objects.all()
+    serializer_class = SharingSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        """
+        filtering against queryset
+        """
+        queryset = Sharing.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is not None:
+            queryset = queryset.filter(Q(username__name=username) | Q(teacher__name=username))
+        return queryset
+
+
+class SharingRUDViews(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Sharing.objects.all()
+    serializer_class = SharingSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly)
+
+    def perform_create(self, serializer):
+        serializer.save(username=self.request.user)
 
 
 class LikesToSharingViewSets(viewsets.ModelViewSet):
