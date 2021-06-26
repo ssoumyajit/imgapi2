@@ -58,8 +58,8 @@ class JourneyListSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Journey
-        fields = ['id', 'username', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
-        read_only_fields = ['id', 'username', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
+        fields = ['id', 'username', 'joevent', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
+        read_only_fields = ['id', 'username', 'joevent', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
 
 
 class WorkSerializers(serializers.ModelSerializer):
