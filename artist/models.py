@@ -132,9 +132,9 @@ class Journey(models.Model):
 
     def save(self, *args, ** kwargs):
         super(Journey, self).save(*args, **kwargs)
-        photo = Image.open(self.jophoto.path)
+        photo = Image.open(self.jophoto1.path)
         photo.thumbnail((240, 180), Image.ANTIALIAS)
-        photo.save(self.jophoto.path, optimize=True, quality=90)
+        photo.save(self.jophoto1.path, optimize=True, quality=90)
 
     def __str__(self):
         return self.jodate
