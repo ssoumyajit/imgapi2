@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 from .models import Artist, ArtistData, Journey, Work
-from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, WorkSerializers
+from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, JourneyListSerializers, \
+    WorkSerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from permissions import IsOwnerOrReadonly
 from rest_framework import generics
@@ -90,12 +91,18 @@ def search(request):
 '''
 
 
-class JourneyListCreateViews(generics.ListCreateAPIView):
+class JourneyCreateViews(generics.CreateAPIView):
     queryset = Journey.objects.all()
     serializer_class = JourneySerializers
     # filter_backends = [filters.SearchFilter]
     # search_fields = ['username__name']
     # authentication_classes = (JWTAuthentication,)  # JWTAuthentication & SessionAuth are different...really.
+    permission_classes = (IsAuthenticated,)
+
+
+class JourneyListViews(generics.ListAPIView):
+    queryset = Journey.objects.all()
+    serializer_class = JourneyListSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     # feature for keeping a post private/public.

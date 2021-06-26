@@ -53,6 +53,15 @@ class JourneySerializers(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class JourneyListSerializers(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+
+    class Meta:
+        model = Journey
+        fields = ['id', 'username', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
+        read_only_fields = ['id', 'username', 'jodate', 'jophoto1', 'isprivate', 'ishighlight']
+
+
 class WorkSerializers(serializers.ModelSerializer):
     username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
 

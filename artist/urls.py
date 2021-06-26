@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import ArtistListCreateViews, ArtistRetrieveUpdateDestroyViews, ArtistDataCreateViews, ArtistDataRetrieveUpdateDestroyViews, \
-                   JourneyListCreateViews, JourneyRUDViews, \
+                   JourneyCreateViews, JourneyRUDViews, JourneyListViews, \
                    WorkListCreateViews, WorkRUDViews
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -12,8 +12,9 @@ urlpatterns = [
     path('portfolios/<username__name>/', ArtistRetrieveUpdateDestroyViews.as_view()),
     path('bios/', ArtistDataCreateViews.as_view()),
     path('bios/<username__name>/', ArtistDataRetrieveUpdateDestroyViews.as_view()),
-    path('journey/', JourneyListCreateViews.as_view()),
+    path('journey/', JourneyCreateViews.as_view()),
     path('journey/<int:pk>', JourneyRUDViews.as_view()),
+    path('journey/list/', JourneyListViews.as_view()),
     path('works/', WorkListCreateViews.as_view()),
     path('works/<int:pk>', WorkRUDViews.as_view())
 ]

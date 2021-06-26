@@ -119,7 +119,11 @@ def create_artist_artistdata(sender, instance, created, **kwargs):
 class Journey(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
     joevent = models.CharField(max_length=255, default="", blank=False)  # must
-    jophoto = models.ImageField(default="", upload_to="events_attended/", blank=False)  # must
+    jophoto1 = models.ImageField(default="", upload_to="events_attended/", blank=False)  # must
+    jophoto2 = models.ImageField(default="", upload_to="events_attended/", blank=False)
+    jophoto3 = models.ImageField(default="", upload_to="events_attended/", blank=False)
+    jophoto4 = models.ImageField(default="", upload_to="events_attended/", blank=False)
+    jophoto5 = models.ImageField(default="", upload_to="events_attended/", blank=False)
     jodate = models.DateField(null=True, blank=True)
     jocontent = models.TextField(default="", blank=True)
     jolink = models.URLField(max_length=255, default="", blank=True)
