@@ -6,6 +6,8 @@ from django_countries.serializers import CountryFieldMixin
 
 
 # from portfolio import settings
+# required = True, on model serializer
+# https://stackoverflow.com/questions/30953481/django-rest-framework-how-to-make-model-serializer-fields-required
 
 
 class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):

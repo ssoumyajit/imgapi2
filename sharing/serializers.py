@@ -30,7 +30,7 @@ class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Sharing
-        fields = ['id', 'username', 'teacher', 's_teacher_name', 's_photo', 's_appreciation', 's_video_talk',
+        fields = ['id', 'username', 'teacher', 's_teacher_name', 's_photo', 's_appreciation', 's_learnings', 's_video_talk',
                   's_video_dance', 's_teacher_country', 's_student_country', 's_date', 's_location', 's_teacher_video',
                   'likes_sharing', 'comments_sharing']
 

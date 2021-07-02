@@ -37,11 +37,11 @@ def scramble_uploaded_filename(file):
 
 
 class Artist(models.Model):
-    username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="artist", blank=False)
-    cover = models.ImageField(default="", upload_to="covers/", blank=True)
-    thumb = models.ImageField(upload_to="thumbnails/", blank=True, editable=False)
-    country = CountryField(default="", blank=True)
-    artist_name = models.CharField(max_length=255, default="", blank=True)
+    username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="artist")
+    cover = models.ImageField(null=True, upload_to="covers/")
+    thumb = models.ImageField(upload_to="thumbnails/", editable=False)
+    country = CountryField(default="")
+    artist_name = models.CharField(max_length=255, default="")
 
     def save(self, *args, **kwargs):
         if not self.make_thumbnail():

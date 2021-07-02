@@ -20,6 +20,7 @@ class Sharing(models.Model):
     s_student_country = CountryField(default="", blank=True)
     s_photo = models.ImageField(default="", upload_to="sharing/")
     s_appreciation = models.TextField(default="")  # 1 line = 8 words, 20 lines to cover up the image
+    s_learnings = models.TextField(default="")
     s_video_talk = models.FileField(default="", upload_to="talk/")
     s_video_dance = models.FileField(default="", upload_to="dance/")
     s_date = models.DateField(auto_now=True)  # keeping track of the user's posting time.
