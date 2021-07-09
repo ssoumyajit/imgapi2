@@ -81,7 +81,7 @@ class Artist(models.Model):
 
 class ArtistData(models.Model):
     username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="artistdata")
-    style = models.CharField(max_length=15, default="", blank=True)
+    style = models.CharField(max_length=255, default="", blank=True)
     # styles = MultiSelectField(choices=STYLES_CHOICES, default='')
     quote = models.CharField(max_length=255, default="", blank=True)
     introduction = models.TextField(default="", blank=True)
@@ -118,15 +118,15 @@ def create_artist_artistdata(sender, instance, created, **kwargs):
 
 class Journey(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
-    joevent = models.CharField(max_length=255, default="", blank=False)  # must
-    jophoto1 = models.ImageField(default="", upload_to="events_attended/", blank=False)  # must
-    jophoto2 = models.ImageField(default="", upload_to="events_attended/", blank=False)
-    jophoto3 = models.ImageField(default="", upload_to="events_attended/", blank=False)
-    jophoto4 = models.ImageField(default="", upload_to="events_attended/", blank=False)
-    jophoto5 = models.ImageField(default="", upload_to="events_attended/", blank=False)
-    jodate = models.DateField(null=True, blank=True)
-    jocontent = models.TextField(default="", blank=True)
-    jolink = models.URLField(max_length=255, default="", blank=True)
+    joevent = models.CharField(max_length=255, default="")  # must
+    jophoto1 = models.ImageField(default="", upload_to="events_attended/", blank=True)  # must
+    jophoto2 = models.ImageField(default="", upload_to="events_attended/")
+    jophoto3 = models.ImageField(default="", upload_to="events_attended/")
+    jophoto4 = models.ImageField(default="", upload_to="events_attended/")
+    jophoto5 = models.ImageField(default="", upload_to="events_attended/")
+    jodate = models.DateField(null=True)
+    jocontent = models.TextField(default="")
+    jolink = models.URLField(max_length=255, default="")
     ishighlight = models.BooleanField(default=False)
     isprivate = models.BooleanField(default=False)
 
@@ -135,7 +135,7 @@ class Journey(models.Model):
         photo = Image.open(self.jophoto1.path)
         photo.thumbnail((240, 180), Image.ANTIALIAS)
         photo.save(self.jophoto1.path, optimize=True, quality=90)
-
+    
     def __str__(self):
         return self.jodate
 
@@ -148,6 +148,7 @@ class Work(models.Model):
     wlocation = models.CharField(max_length=255, default="", blank=False)
     wupcoming = models.BooleanField(default=False)
 
+    
     def save(self, *args, ** kwargs):
         super(Work, self).save(*args, **kwargs)
         wflier = Image.open(self.wflier.path)

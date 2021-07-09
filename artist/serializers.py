@@ -53,6 +53,8 @@ class JourneySerializers(serializers.ModelSerializer):
     class Meta:
         model = Journey
         fields = "__all__"
+        extra_kwargs = {"jophoto1": {'required':True}}
+        # allow_blank = False shows error. allow_blank is not accepted.
 
 
 class JourneyListSerializers(serializers.ModelSerializer):
