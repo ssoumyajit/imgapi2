@@ -99,6 +99,9 @@ class JourneyCreateViews(generics.CreateAPIView):
     # authentication_classes = (JWTAuthentication,)  # JWTAuthentication & SessionAuth are different...really.
     permission_classes = (IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(username=self.request.user)
+
 
 class JourneyListViews(generics.ListAPIView):
     queryset = Journey.objects.all()

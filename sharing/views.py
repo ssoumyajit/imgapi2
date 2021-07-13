@@ -25,6 +25,9 @@ class SharingListCreateViews(generics.ListCreateAPIView):
     serializer_class = SharingSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+    def perform_create(self, serializer):
+        serializer.save(username=self.request.user)
+        
     def get_queryset(self):
         """
         filtering against queryset
