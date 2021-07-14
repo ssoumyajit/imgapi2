@@ -27,13 +27,16 @@ SECRET_KEY = '$l8%rpz%p*lf4+2o!+#9##-rfajavf)-=0_w$!7zc)+5vj9jm@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# CORS_AllOWED_ORIGIN = [ "http://localhost:3000", ]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", ]
+
 # CORS_ALLOW_ALL_ORIGINS = True
-ALLOWED_HOSTS = []
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-]
+
+# --------------
+# ALLOWED_HOSTS = ['*']
+# CORS_ORIGIN_ALLOW_ALL = True
+# --------------
+
+# CORS_ORIGIN_WHITELIST = ['http://localhost:3000',]
 
 
 # Application definition
