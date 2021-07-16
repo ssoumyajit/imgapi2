@@ -28,14 +28,14 @@ SECRET_KEY = '$l8%rpz%p*lf4+2o!+#9##-rfajavf)-=0_w$!7zc)+5vj9jm@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# CORS_ALLOW_ALL_ORIGINS = True
+ CORS_ALLOW_ALL_ORIGINS = True
 
 # --------------
-# ALLOWED_HOSTS = ['*']
+ ALLOWED_HOSTS = ['*']
 # CORS_ORIGIN_ALLOW_ALL = True
 # --------------
 
-# CORS_ORIGIN_WHITELIST = ['http://localhost:3000',]
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'https://inmygroove.herokuapp.com']
 # https://stackoverflow.com/questions/44037474/cors-error-while-consuming-calling-rest-api-with-react
 
 # Application definition
@@ -88,7 +88,7 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
 }
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", "https://inmygroove.herokuapp.com"]
+# CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", "https://inmygroove.herokuapp.com"]
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
