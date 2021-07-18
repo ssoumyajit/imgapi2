@@ -1,3 +1,5 @@
+release: python manage.py makemigrations user --no-input
+release: python manage.py migrate user --no-input
 release: python manage.py makemigrations --no-input
 release: python manage.py migrate --no-input
 
