@@ -9,9 +9,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('portfolios/', ArtistListCreateViews.as_view()),
-    path('portfolios/<username__name>/', ArtistRetrieveUpdateDestroyViews.as_view()),
+    path('portfolios/<username__username>/', ArtistRetrieveUpdateDestroyViews.as_view()),
     path('bios/', ArtistDataCreateViews.as_view()),
-    path('bios/<username__name>/', ArtistDataRetrieveUpdateDestroyViews.as_view()),
+    path('bios/<username__username>/', ArtistDataRetrieveUpdateDestroyViews.as_view()),
     path('journey/', JourneyCreateViews.as_view()),
     path('journey/<int:pk>', JourneyRUDViews.as_view()),
     path('journey/list/', JourneyListViews.as_view()),

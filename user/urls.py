@@ -1,3 +1,5 @@
+"""
+
 from django.urls import path
 from rest_framework import generics
 from .views import CreateUserView, ManageUserView, CustomObtainAuthToken
@@ -13,3 +15,4 @@ urlpatterns = [
     path('update/', ManageUserView.as_view(), name='update'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
+"""

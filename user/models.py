@@ -1,4 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+GENDER_SELECTION = [
+    ('M', 'Male'),
+    ('F', 'Female'),
+    ('NS', 'Not Specified')
+]
+
+
+class User(AbstractUser):
+    gender = models.CharField(max_length=20, choices=GENDER_SELECTION, default='NS')
+
+
+
+
+
+
+
+
+
+
+'''
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 # from django_countries.fields import CountryField
@@ -38,3 +61,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()  # creates a new user manager for our object
     USERNAME_FIELD = 'email'
+'''

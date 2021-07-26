@@ -41,7 +41,7 @@ class ArtistRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView):
     # retrieve stands for read-only endpoints to represent a single model instance.
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializers
-    lookup_field = "username__name"
+    lookup_field = "username__username"
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
     # parser_classes = (FormParser, MultiPartParser,)
     
@@ -69,7 +69,7 @@ class ArtistDataCreateViews(generics.CreateAPIView):
 class ArtistDataRetrieveUpdateDestroyViews(generics.RetrieveUpdateDestroyAPIView):
     queryset = ArtistData.objects.all()
     serializer_class = ArtistDataSerializers
-    lookup_field = 'username__name'
+    lookup_field = 'username__username'
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
 
     def perform_create(self, serializer):
@@ -94,9 +94,6 @@ def search(request):
 class JourneyCreateViews(generics.CreateAPIView):
     queryset = Journey.objects.all()
     serializer_class = JourneySerializers
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['username__name']
-    # authentication_classes = (JWTAuthentication,)  # JWTAuthentication & SessionAuth are different...really.
     permission_classes = (IsAuthenticated,)
 
 
@@ -117,10 +114,10 @@ class JourneyListViews(generics.ListAPIView):
 
             # logic to filter based on normal user or loggedIn user
             if self.request.user.is_authenticated and username == self.request.user.name:
-                queryset = queryset.filter(username__name=username)
+                queryset = queryset.filter(username__username=username)
                 return queryset
             else:
-                queryset = queryset.filter(username__name=username)
+                queryset = queryset.filter(username__username=username)
                 queryset = queryset.filter(isprivate=False)
                 return queryset
         return queryset
@@ -151,7 +148,7 @@ class WorkListCreateViews(generics.ListCreateAPIView):
         queryset = Work.objects.all()
         username = self.request.query_params.get('username', None)
         if username is not None:
-            queryset = queryset.filter(username__name=username)
+            queryset = queryset.filter(username__username=username)
         return queryset
 
 

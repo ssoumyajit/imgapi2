@@ -22,10 +22,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     # path('api/v1/', include(router.urls)),
-    path('api/v1/user/', include('user.urls')),
+    path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('api/v1/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    # path('api/v1/user/', include('user.urls')),
     path('api/v1/artist/', include('artist.urls')),
     path('api/v1/e1t1/', include('sharing.urls')),
-    path('api/v1/lessons/', include('onlineclass.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

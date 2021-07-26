@@ -1,3 +1,48 @@
+from django.db import transaction
+from rest_framework import serializers
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from user.models import GENDER_SELECTION, User
+
+
+class CustomRegisterSerializer(RegisterSerializer):
+    gender = serializers.ChoiceField(choices=GENDER_SELECTION)
+
+    # Define transaction.atomic to rollback the save operation in case of error
+    @transaction.atomic
+    def save(self, request):
+        user = super().save(request)
+        user.gender = self.data.get('gender')
+        user.save()
+        return user
+
+
+class CustomUserDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'email',
+            'gender',
+            'username',
+        )
+        read_only_fields = ('pk', 'email', 'gender', 'username')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.serializers import ModelSerializer
 from .models import User
@@ -11,9 +56,11 @@ from django_countries.serializer_fields import CountryField
 # https://github.com/SmileyChris/django-countries
 # https://github.com/SmileyChris/django-countries/issues/106
 # https://stackoverflow.com/questions/40669313/django-countries-in-django-rest-framework
+"""
 
+"""
 class UserSerializer(ModelSerializer):
-    """ serializer for users object"""
+    # serializer for users object
 
     # country = CountryField()
     class Meta:
@@ -23,15 +70,15 @@ class UserSerializer(ModelSerializer):
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
-        """create a new user with encrypted password and return it"""
-        """basically overwrites the create function provided by base user class \
-           and uses our custom user model"""
+        # create a new user with encrypted password and return it
+        # basically overwrites the create function provided by base user class \
+        #   and uses our custom user model
         return get_user_model().objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
-        """
-        update a user, setting the password correctly and return it.
-        """
+
+        # update a user, setting the password correctly and return it.
+
         password = validated_data.pop('password', None)
         user = super().update(instance, validated_data)
 
@@ -43,9 +90,8 @@ class UserSerializer(ModelSerializer):
 
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
-    """
-    Provides user details along with tokens
-    """
+
+    # Provides user details along with tokens
 
     def validate(self, attrs):
         # default result (access/refresh tokens)
@@ -57,21 +103,21 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         return data
 
 
-'''
 class AuthTokenSerializer(serializers.Serializer):
-    """
-    serializer for user authentication object.
-    """
+
+    # serializer for user authentication object.
+
     email = serializers.CharField()
     password = serializers.CharField(
         style = {'input_type': 'password'},
         trim_whitespace = False
     )
-    #username
+    # username
+
     def validate(self, attrs):
-        """
-        validate and authenticate the user
-        """
+
+        # validate and authenticate the user
+
         email = attrs.get('email')
         password = attrs.get('password')
         user = authenticate(
@@ -84,6 +130,6 @@ class AuthTokenSerializer(serializers.Serializer):
             raise serializers.ValidationError(msg, code = 'authorization')
         attrs['user'] = user
         return attrs
-        #you always return the object at the end of the validation.
-'''
+        # you always return the object at the end of the validation.
+"""
 

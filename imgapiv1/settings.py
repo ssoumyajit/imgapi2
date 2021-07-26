@@ -48,11 +48,18 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'dj_rest_auth.registration',
+
     'user',
     'artist',
     'sharing',
-    'onlineclass',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -69,12 +76,15 @@ ROOT_URLCONF = 'imgapiv1.urls'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
         # register the session auth so that, u can see the person who is logged in in browsable API
         # that person's session is running. u can access admin if that credential is of an admin.
-        # 'rest_framework.authentication.SessionAuthentication'
+
 
     ],
     'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
@@ -86,10 +96,20 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
 }
 
+'''
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15)
 }
+'''
+
+AUTHENTICATION_BACKENDS = [
+    # allauth specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # Needed to login by username in Django admin, regardless of allauth
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 TEMPLATES = [
     {
@@ -162,7 +182,24 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'  # add this
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # add this
 
+
+REST_USE_JWT = True  # for dj_rest_auth
+JWT_AUTH_COOKIE = 'img-auth'
+JWT_AUTH_REFRESH_COOKIE = 'img-refresh-token'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'mandatory' otherwise
+
 AUTH_USER_MODEL = 'user.User'  # 'nameOfApp.Model'
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'user.serializers.CustomRegisterSerializer',
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'user.serializers.CustomUserDetailsSerializer',
+}
 
 # query
 # https://medium.com/swlh/searching-in-django-rest-framework-45aad62e7782

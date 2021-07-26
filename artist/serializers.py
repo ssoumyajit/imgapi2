@@ -14,7 +14,7 @@ class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
     # username = serializers.ReadOnlyField(source='username.name')
     # username = serializers.HiddenField(default=serializers.CurrentUserDefault())
     # HiddenField https://stackoverflow.com/questions/49557741/django-hiddenfield-value-generated-on-views
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Artist
@@ -35,7 +35,7 @@ class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class ArtistDataSerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     # styles = serializers.MultipleChoiceField(choices=STYLES_CHOICES, allow_blank=True)
     # source='get_styles_display'
 
@@ -46,7 +46,7 @@ class ArtistDataSerializers(serializers.ModelSerializer):
 
 
 class JourneySerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Journey
@@ -54,7 +54,7 @@ class JourneySerializers(serializers.ModelSerializer):
 
 
 class JourneyListSerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Journey
@@ -63,7 +63,7 @@ class JourneyListSerializers(serializers.ModelSerializer):
 
 
 class WorkSerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Work
