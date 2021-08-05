@@ -1,4 +1,7 @@
 from rest_framework import permissions
+from groups.models import Group
+from rest_framework import generics
+from groups.serializers import GroupSerializer
 
 
 class IsOwnerOrReadonly(permissions.BasePermission):
@@ -44,3 +47,13 @@ if obj.username == request.user:
 else:
     return False
 '''
+
+
+class GroupMemberViews(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
+class GroupPermission(permissions.BasePermission):
+    pass
+    # request.user > [ Membership.objects.all().filter.GroupName.members ]

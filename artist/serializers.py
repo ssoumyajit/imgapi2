@@ -4,7 +4,6 @@ from .models import STYLES_CHOICES
 from user.models import User
 from django_countries.serializers import CountryFieldMixin
 
-
 # from portfolio import settings
 
 
