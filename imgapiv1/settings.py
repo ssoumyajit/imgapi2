@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-import django_heroku
+# import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -115,7 +115,7 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'imgapiv1-2/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -191,7 +191,19 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'mandatory' otherwise
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # 'mandatory' otherwise
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+LOGIN_URL = 'http://localhost:8000/api/v1/auth/login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'inmygroovelifestyle@gmail.com'
+EMAIL_HOST_PASSWORD = 'waternapkincypher'
+
+CUSTOM_PASSWORD_RESET_CONFIRM = 'http://localhost:8000/api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/'
 
 AUTH_USER_MODEL = 'user.User'  # 'nameOfApp.Model'
 REST_AUTH_REGISTER_SERIALIZERS = {
@@ -206,6 +218,6 @@ REST_AUTH_SERIALIZERS = {
 # https://medium.com/swlh/searching-in-django-rest-framework-45aad62e7782
 
 COVER_THUMBNAIL_SIZE = (200, 100)
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 

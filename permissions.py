@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from groups.models import Group
+from groups.models import Group, Membership
 from rest_framework import generics
 from groups.serializers import GroupSerializer
 
@@ -56,4 +56,10 @@ class GroupMemberViews(generics.ListAPIView):
 
 class GroupPermission(permissions.BasePermission):
     pass
+
+    # def has_object_permission(self, request, view, obj):
+    # blocked = Membership.objects.filter
     # request.user > [ Membership.objects.all().filter.GroupName.members ]
+    # request.user > Group.objects.all().filter.GroupName.members
+    # request.user ~ Membership.user ~
+
