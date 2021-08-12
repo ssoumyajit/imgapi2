@@ -24,7 +24,7 @@ class ArtistListCreateViews(generics.ListCreateAPIView):
         query = self.request.query_params.get('query', None)
 
         if query is not None:
-            queryset = queryset.filter(Q(username__name__icontains=query) | Q(artist_name__icontains=query))
+            queryset = queryset.filter(Q(username__username__icontains=query) | Q(artist_name__icontains=query))
             return queryset
 
         return queryset
@@ -113,7 +113,7 @@ class JourneyListViews(generics.ListAPIView):
         if username is not None:
 
             # logic to filter based on normal user or loggedIn user
-            if self.request.user.is_authenticated and username == self.request.user.name:
+            if self.request.user.is_authenticated and username == self.request.user.username:
                 queryset = queryset.filter(username__username=username)
                 return queryset
             else:
