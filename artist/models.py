@@ -81,7 +81,7 @@ class Artist(models.Model):
 
 class ArtistData(models.Model):
     username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="artistdata")
-    style = models.CharField(max_length=15, default="", blank=True)
+    style = models.CharField(max_length=255, default="", blank=True)
     # styles = MultiSelectField(choices=STYLES_CHOICES, default='')
     quote = models.CharField(max_length=255, default="", blank=True)
     introduction = models.TextField(default="", blank=True)

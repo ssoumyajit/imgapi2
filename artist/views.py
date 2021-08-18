@@ -1,7 +1,7 @@
 # from django.shortcuts import render
 from .models import Artist, ArtistData, Journey, Work
 from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, JourneyListSerializers, \
-    WorkSerializers
+    WorkSerializers, ArtistListSerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from permissions import IsOwnerOrReadonly
 from rest_framework import generics
@@ -11,9 +11,14 @@ from django.db.models import Q
 # from rest_framework.response import Response
 
 
-class ArtistListCreateViews(generics.ListCreateAPIView):
-    queryset = Artist.objects.all()
+class ArtistCreateViews(generics.CreateAPIView):
     serializer_class = ArtistSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class ArtistListViews(generics.ListAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistListSerializers
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):

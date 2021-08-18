@@ -7,6 +7,15 @@ from django_countries.serializers import CountryFieldMixin
 # from portfolio import settings
 
 
+class ArtistListSerializers(CountryFieldMixin, serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = Artist
+        fields = ['username', 'artist_name', 'thumb', 'country']
+        read_only_fields = ('username', 'country', 'artist_name', 'thumb')
+
+
 class ArtistSerializers(CountryFieldMixin, serializers.ModelSerializer):
     # overridden username here
     # this is where the bug is, so don can patch on Batala while updating in postman
