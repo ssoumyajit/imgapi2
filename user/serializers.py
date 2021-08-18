@@ -2,16 +2,20 @@ from django.db import transaction
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from user.models import GENDER_SELECTION, User
+# from django_countries.serializers import CountryFieldMixin
+from django_countries.serializer_fields import CountryField  # for low level usage
 
 
 class CustomRegisterSerializer(RegisterSerializer):
     gender = serializers.ChoiceField(choices=GENDER_SELECTION)
+    country = CountryField()
 
     # Define transaction.atomic to rollback the save operation in case of error
     @transaction.atomic
     def save(self, request):
         user = super().save(request)
         user.gender = self.data.get('gender')
+        user.country = self.data.get('country')
         user.save()
         return user
 
@@ -25,8 +29,9 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
             'email',
             'gender',
             'username',
+            'country'
         )
-        read_only_fields = ('pk', 'email', 'gender', 'username')
+        read_only_fields = ('pk', 'email', 'gender', 'username', 'country')
 
 
 

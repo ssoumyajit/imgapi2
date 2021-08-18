@@ -76,8 +76,8 @@ class Comments(models.Model):
     # messagetext = charfield
 
 class SharingMessage(models.Model):
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna", null = True)
-    shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null= True)
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna", null=True)
+    shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null=True)
     messagetext = models.TextField(default='')
     created = models.DateTimeField(auto_now=True)
 

@@ -6,7 +6,7 @@ from django_countries.serializers import CountryFieldMixin
 
 
 class LikesToSharingSerializers(serializers.ModelSerializer):
-    l_liker = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    l_liker = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = LikesToSharing
@@ -14,7 +14,7 @@ class LikesToSharingSerializers(serializers.ModelSerializer):
 
 
 class CommentSerializers(serializers.ModelSerializer):
-    c_commenter = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    c_commenter = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Comments
@@ -22,8 +22,8 @@ class CommentSerializers(serializers.ModelSerializer):
 
 
 class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
-    teacher = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    teacher = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     # likes_count = serializers.SerializerMethodField()
     likes_sharing = LikesToSharingSerializers(many=True, read_only=True)
     comments_sharing = CommentSerializers(many=True, read_only=True)
@@ -36,7 +36,7 @@ class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class SharingMessageSerializers(serializers.ModelSerializer):
-    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='name')
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = SharingMessage

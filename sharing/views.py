@@ -32,7 +32,7 @@ class SharingListCreateViews(generics.ListCreateAPIView):
         queryset = Sharing.objects.all()
         username = self.request.query_params.get('username', None)
         if username is not None:
-            queryset = queryset.filter(Q(username__name=username) | Q(teacher__name=username))
+            queryset = queryset.filter(Q(username__username=username) | Q(teacher__username=username))
         return queryset
 
 
