@@ -141,6 +141,32 @@ class JourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
     # def perform_update ??
 
 
+class UpcomingEvents(generics.ListAPIView):
+    # queryset = Journey.upcoming_objects.all()
+    serializer_class = JourneyListSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    # feature for keeping a post private/public.
+    def get_queryset(self):
+        """
+        filtering against queryset
+        """
+        queryset = Journey.upcoming_objects.all()
+        username = self.request.query_params.get('username', None)
+
+        if username is not None:
+
+            # logic to filter based on normal user or loggedIn user
+            if self.request.user.is_authenticated and username == self.request.user.username:
+                queryset = queryset.filter(username__username=username)
+                return queryset
+            else:
+                queryset = queryset.filter(username__username=username)
+                queryset = queryset.filter(isprivate=False)
+                return queryset
+        return queryset
+
+
 class WorkListCreateViews(generics.ListCreateAPIView):
     queryset = Work.objects.all()
     serializer_class = WorkSerializers

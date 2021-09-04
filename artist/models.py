@@ -2,7 +2,8 @@ from django.db import models
 from multiselectfield import MultiSelectField
 from django.conf import settings
 from django_countries.fields import CountryField
-import time
+# import time
+from datetime import date
 import uuid
 
 # for testing artist creation when the user is created using signals.
@@ -116,6 +117,11 @@ def create_artist_artistdata(sender, instance, created, **kwargs):
 # https://stackoverflow.com/questions/33659994/django-rest-framework-create-user-and-user-profile
 
 
+class UpcomingEventManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(jodate__gt=date.today())
+
+
 class Journey(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
     joevent = models.CharField(max_length=255, default="", blank=False)  # must
@@ -129,6 +135,15 @@ class Journey(models.Model):
     jolink = models.URLField(max_length=255, default="", blank=True)
     ishighlight = models.BooleanField(default=False)
     isprivate = models.BooleanField(default=False)
+    objects = models.Manager()
+    upcoming_objects = UpcomingEventManager()
+
+    '''
+    @property
+    def upcoming(self):
+        if self.jodate:
+            return date.today() < self.jodate
+    '''
 
     def save(self, *args, ** kwargs):
         super(Journey, self).save(*args, **kwargs)
