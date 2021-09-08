@@ -23,7 +23,7 @@ class Sharing(models.Model):
     s_video_talk = models.FileField(default="", upload_to="talk/")
     s_video_dance = models.FileField(default="", upload_to="dance/")
     s_date = models.DateField(auto_now=True)  # keeping track of the user's posting time.
-    s_location = models.CharField(max_length=255,)
+    s_location = models.CharField(default="", max_length=255)
     s_teacher_video = models.URLField(default="", max_length=255, blank=True)
 
     # voters_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = "votes")
