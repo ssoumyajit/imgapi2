@@ -29,7 +29,6 @@ urlpatterns = [
     # path('api/v1/auth/registration/resend-email/'),
     path('api/v1/auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/v1/auth/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
-
     # this path is used to generate email content for password reset request
     # from dj-rest-auth API; format is same as used by default django auth so
     # the generated URL must be translated to be used with allauth
@@ -45,7 +44,7 @@ urlpatterns = [
     # path('api/v1/user/', include('user.urls')),
     path('api/v1/artist/', include('artist.urls')),
     path('api/v1/e1t1/', include('sharing.urls')),
-
+    path('alerts/', include('alerts.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

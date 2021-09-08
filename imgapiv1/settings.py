@@ -58,6 +58,9 @@ INSTALLED_APPS = [
     'artist',
     'sharing',
     'groups',
+    'alerts',
+    # 'notifications',
+    # 'notifications_rest',
 ]
 
 SITE_ID = 1
