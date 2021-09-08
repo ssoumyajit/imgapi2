@@ -23,7 +23,9 @@ class CommentSerializers(serializers.ModelSerializer):
 
 class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
     username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
-    teacher = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    teacher = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username', required=False, allow_null=True)
+    s_photo = serializers.ImageField(required=True, allow_null=True)
+    s_location = serializers.CharField(required=True, allow_null=True)
     # likes_count = serializers.SerializerMethodField()
     likes_sharing = LikesToSharingSerializers(many=True, read_only=True)
     comments_sharing = CommentSerializers(many=True, read_only=True)
