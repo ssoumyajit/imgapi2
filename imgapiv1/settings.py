@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'artist',
     'sharing',
     'groups',
+    'inquiry',
 ]
 
 SITE_ID = 1

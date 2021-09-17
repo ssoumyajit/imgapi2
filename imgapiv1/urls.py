@@ -20,6 +20,8 @@ from django.conf.urls.static import static
 from dj_rest_auth.registration.views import VerifyEmailView, ConfirmEmailView
 from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
 from user.views import ApiPasswordResetView
+
+
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
@@ -45,6 +47,7 @@ urlpatterns = [
     # path('api/v1/user/', include('user.urls')),
     path('api/v1/artist/', include('artist.urls')),
     path('api/v1/e1t1/', include('sharing.urls')),
+    path('api/v1/inquiry/', include('inquiry.urls')),
 
 ]
 if settings.DEBUG:
