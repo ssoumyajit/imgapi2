@@ -215,6 +215,8 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'user.serializers.CustomUserDetailsSerializer',
 }
 
+# dj_rest_auth password change
+OLD_PASSWORD_FIELD_ENABLED = True
 # query
 # https://medium.com/swlh/searching-in-django-rest-framework-45aad62e7782
 
