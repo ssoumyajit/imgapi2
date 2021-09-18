@@ -8,6 +8,9 @@ import time
 import datetime
 import uuid
 
+from gebblesalert.models import E1T1Notification
+from django.db.models.signals import post_save
+
 
 class Sharing(models.Model):
     # SHARING starts with the student.
@@ -30,6 +33,15 @@ class Sharing(models.Model):
 
     class Meta:
         ordering = ['s_date']
+
+    def user_tagged_teacher(sender, instance, *args, **kwargs):
+        e1t1obj = instance
+        taggedteacher = e1t1obj.teacher
+        self = e1t1obj.username
+        notify = E1T1Notification(e1t1object=e1t1obj, sender=self, receiver=taggedteacher)
+        notify.save()
+
+post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)
 
 
 class LikesToSharing(models.Model):

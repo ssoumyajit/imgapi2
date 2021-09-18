@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'sharing',
     'groups',
     'inquiry',
+    'gebblesalert',
 ]
 
 SITE_ID = 1
