@@ -107,9 +107,9 @@ class LearningsListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Learnings.objects.all()
-        username = self.request.query_params.get('username', None)
-        if username is not None:
-            queryset = queryset.filter(Q(username__username=username))
+        shareidobj = self.request.query_params.get('shareidobj', None)
+        if shareidobj is not None:
+            queryset = queryset.filter(Q(shareidobj=shareidobj))
         return queryset
 
 
