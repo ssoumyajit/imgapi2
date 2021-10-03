@@ -95,6 +95,7 @@ class SharingMessageViewSets(viewsets.ModelViewSet):
 
 class LearningsCreateView(generics.CreateAPIView):
     serializer_class = LearningsSerializers
+    permission_classes = (IsAuthenticated, )
 
 
 class LearningsListView(generics.ListAPIView):
