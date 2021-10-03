@@ -10,3 +10,12 @@ class E1T1NotificationSerializers(serializers.ModelSerializer):
     class Meta:
         model = E1T1Notification
         fields = ['id', 'e1t1object', 'sender', 'receiver', 'text', 'time', 'is_seen']
+
+
+# create a serializer to keep every attribute except is_seen read_only.
+# because otherwise a user can change the e1t1 object id. such a serious bug.
+class E1T1NotificationIsSeenUpdateOnlySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = E1T1Notification
+        fields = ['id', 'e1t1object', 'sender', 'receiver', 'text', 'time', 'is_seen']
+        read_only_fields = ['id', 'e1t1object', 'sender', 'receiver', 'text']

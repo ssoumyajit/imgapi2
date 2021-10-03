@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from sharing.models import Sharing, Comments, LikesToSharing, SharingMessage
+from sharing.models import Sharing, Comments, LikesToSharing, SharingMessage, Learnings, LikesForLearning
 # from user.serializers import UserSerializer
 from user.models import User
 from django_countries.serializers import CountryFieldMixin
+# from rest_framework.validators import UniqueTogetherValidator  # one student can tag a teacher once
 
 
 class LikesToSharingSerializers(serializers.ModelSerializer):
@@ -43,3 +44,77 @@ class SharingMessageSerializers(serializers.ModelSerializer):
     class Meta:
         model = SharingMessage
         fields = ['username', 'shareid', 'messagetext', 'created']
+
+
+class LearningsSerializers(serializers.ModelSerializer):
+    """
+    for CRUD operations.
+    Keep the learning update limited to PUT ONLY, do not use patch.
+    create and update methods overridden such that when there is video file available,
+    videouploaded Boolean field is made True, otherwise False.
+    """
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = Learnings
+        fields = ['id', 'username', 'shareidobj', 'lesson', 'timestamp', 'video']  # only for serialization , NOT Deserialization
+
+    def create(self, validated_data):
+        video = validated_data.pop('video', False)
+        if video:
+            validated_data['video'] = video
+            validated_data['videouploaded'] = True
+            return Learnings.objects.create(**validated_data)
+        return Learnings.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        video = validated_data.pop('video', False)
+        if video:
+            validated_data['video'] = video
+            validated_data['videouploaded'] = True
+
+            instance.shareidobj = validated_data.get('shareidobj', instance.shareidobj)
+            instance.username = validated_data.get('username', instance.username)
+            instance.lesson = validated_data.get('lesson', instance.lesson)
+            instance.timestamp = validated_data.get('timestamp', instance.timestamp)
+            instance.video = validated_data.get('video', instance.video)
+            instance.videouploaded = validated_data.get('videouploaded', instance.videouploaded)
+
+            instance.save()
+            return instance
+        else:
+            validated_data['videouploaded'] = False
+
+            instance.shareidobj = validated_data.get('shareidobj', instance.shareidobj)
+            instance.username = validated_data.get('username', instance.username)
+            instance.lesson = validated_data.get('lesson', instance.lesson)
+            instance.timestamp = validated_data.get('timestamp', instance.timestamp)
+            instance.video = validated_data.get('video', instance.video)
+            instance.videouploaded = validated_data.get('videouploaded', instance.videouploaded)
+
+            instance.save()
+            return instance
+
+
+# for Listing and retrieving only.
+class LearningsSerializersWithoutVideo(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = Learnings
+        fields = ['id', 'username', 'shareidobj', 'lesson', 'timestamp', 'videouploaded']
+        read_only_fields = ['id', 'username', 'shareidobj', 'lesson', 'timestamp', 'videouploaded']
+
+
+class LikesForLearningSerializer(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = LikesForLearning
+        fields = '__all__'
+
+    # add the total likes count to the serialized data
+    # def to_representation(self, instance):
+        # representation = super().to_representation(instance)
+        # representation['likes'] = instance.
+

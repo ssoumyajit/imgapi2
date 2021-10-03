@@ -34,6 +34,7 @@ class Sharing(models.Model):
     class Meta:
         ordering = ['s_date']
 
+    @staticmethod
     def user_tagged_teacher(sender, instance, *args, **kwargs):
         e1t1obj = instance
         taggedteacher = e1t1obj.teacher
@@ -92,4 +93,34 @@ class SharingMessage(models.Model):
     shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null=True)
     messagetext = models.TextField(default='')
     created = models.DateTimeField(auto_now=True)
+
+
+class Learnings(models.Model):
+    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="learningid")
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="learninguser")
+    lesson = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    video = models.FileField(default="", upload_to="sharing/videos/")
+    videouploaded = models.BooleanField(default=False)
+
+
+class LikesForLearning(models.Model):
+    LOVE = 'LO'
+    FIRE = 'FI'
+    DEEP = 'DE'
+
+    HOW_YOU_LIKE_IT_CHOICES = [
+        (LOVE, 'love'),
+        (FIRE, 'fire'),
+        (DEEP, 'deep'),
+    ]
+
+    #  likeforlearning ~ lfl
+    learningid = models.ForeignKey(Learnings, on_delete=models.CASCADE, related_name="lflid", blank=False)
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lfluser", blank=False)
+    like_type = models.CharField(
+        max_length=2,
+        choices=HOW_YOU_LIKE_IT_CHOICES,
+        default=LOVE
+    )
 

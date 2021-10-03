@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from .models import Sharing, Comments, LikesToSharing, SharingMessage
+from .models import Sharing, Comments, LikesToSharing, SharingMessage, Learnings
 from rest_framework import viewsets
-from .serializers import SharingSerializers, CommentSerializers, LikesToSharingSerializers, SharingMessageSerializers
+from .serializers import SharingSerializers, CommentSerializers, LikesToSharingSerializers, SharingMessageSerializers, \
+    LearningsSerializers, LearningsSerializersWithoutVideo
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -90,3 +91,28 @@ class SharingMessageViewSets(viewsets.ModelViewSet):
         if shareid is not None:
             queryset = queryset.filter(shareid__id=shareid).order_by('-created')
         return queryset
+
+
+class LearningsCreateView(generics.CreateAPIView):
+    serializer_class = LearningsSerializers
+
+
+class LearningsListView(generics.ListAPIView):
+    serializer_class = LearningsSerializersWithoutVideo
+    queryset = Learnings.objects.all()
+
+    # need a pagination function here
+    # need to write an algorithm to select and shuffle content here.
+
+    def get_queryset(self):
+        queryset = Learnings.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is not None:
+            queryset = queryset.filter(Q(username__username=username))
+        return queryset
+
+
+class LearningsRUDView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = LearningsSerializers
+    queryset = Learnings.objects.all()
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly, )

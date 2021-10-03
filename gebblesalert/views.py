@@ -1,6 +1,6 @@
 from rest_framework import generics
 from .models import E1T1Notification
-from .serializers import E1T1NotificationSerializers
+from .serializers import E1T1NotificationSerializers, E1T1NotificationIsSeenUpdateOnlySerializers
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 
@@ -19,7 +19,7 @@ class E1T1NotificationsViews(generics.ListCreateAPIView):
 
 class E1T1IsSeenUpdateView(generics.RetrieveUpdateAPIView):
     queryset = E1T1Notification.objects.all()
-    serializer_class = E1T1NotificationSerializers
+    serializer_class = E1T1NotificationIsSeenUpdateOnlySerializers
     permission_classes = [IsAuthenticated, ]
 
     def perform_create(self, serializer):

@@ -114,6 +114,15 @@ def create_artist_artistdata(sender, instance, created, **kwargs):
         Artist.objects.create(username=instance)
         ArtistData.objects.create(username=instance)
 
+
+"""
+# add, but before sort out that user deletion , not there yet.
+@receiver(post_delete, sender=User)
+def delete_artist_artistdata(sender, instance, created, **kwargs):
+    if deleted:
+        Artist.objects.delete(username=instance)
+        ArtistData.objects.delete(username=instance)
+"""
 # https://stackoverflow.com/questions/33659994/django-rest-framework-create-user-and-user-profile
 
 
