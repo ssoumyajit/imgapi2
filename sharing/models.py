@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.db import models
 from django.conf import settings
 from user.models import User
@@ -45,49 +44,6 @@ class Sharing(models.Model):
 post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)
 
 
-class LikesToSharing(models.Model):
-    LOVE = 'LO'
-    DOPE = 'DO'
-    INSPIRING = 'IS'
-    RESPECT = 'RS'
-    CUTE = 'CT'
-    INFORMATIVE = 'IF'
-    EMOTIONAL = 'EM'
-
-    HOW_YOU_LIKE_IT_CHOICES = [
-        (LOVE, 'love'),
-        (DOPE, 'dope'),
-        (INSPIRING, 'inspiring'),
-        (RESPECT, 'respect'),
-        (CUTE, 'cute'),
-        (INFORMATIVE, 'informative'),
-        (EMOTIONAL, 'emotional'),
-    ]
-
-    l_shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="likes_sharing")
-    l_liker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    l_type = models.CharField(
-        max_length=2,
-        choices=HOW_YOU_LIKE_IT_CHOICES,
-        default=LOVE
-    )
-
-
-class Comments(models.Model):
-    c_shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="comments_sharing")
-    c_commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    c_comment = models.TextField(default="")  # add a validation here.
-    c_time = models.DateTimeField(auto_now=True)
-    # may be here just a like option embedded directly, no types of like.
-
-
-# class SharingMessage(models.Model):
-#     pass
-    # username = fk (User)     : view > if request.user -> MessagePermission (True)
-    # shareid = fk (Sharing)   # : add validation on serializer based on username and trim down the options ( one user has few shares only )
-    # add frontend validation: automatically add shareid, coz u r in detail page.
-    # messagetext = charfield
-
 class SharingMessage(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna", null=True)
     shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null=True)
@@ -115,12 +71,92 @@ class LikesForLearning(models.Model):
         (DEEP, 'deep'),
     ]
 
-    #  likeforlearning ~ lfl
-    learningid = models.ForeignKey(Learnings, on_delete=models.CASCADE, related_name="lflid", blank=False)
+    #  like for learning ~ lfl
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lfluser", blank=False)
+    learningidobj = models.ForeignKey(Learnings, on_delete=models.CASCADE, related_name="lflid", blank=False)
     like_type = models.CharField(
         max_length=2,
         choices=HOW_YOU_LIKE_IT_CHOICES,
         default=LOVE
     )
+    timestamp = models.DateTimeField(auto_now_add=True)
 
+
+class CommentsForLearning(models.Model):
+
+    #  comments for learning ~ cfl
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cfluser", blank=False)
+    learningidobj = models.ForeignKey(Learnings, on_delete=models.CASCADE, related_name="cflid", blank=False)
+    comment = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class LoveForSharing(models.Model):
+    # love for sharing ~ lfs
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lfsuser", blank=False)
+    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="lfsid")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class CommentsForSharing(models.Model):
+    # comments for sharing ~ cfs
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cfsuser", blank=False)
+    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="cfsid")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField(default="")  # add a validation here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+class LikesToSharing(models.Model):
+    LOVE = 'LO'
+    DOPE = 'DO'
+    INSPIRING = 'IS'
+    RESPECT = 'RS'
+    CUTE = 'CT'
+    INFORMATIVE = 'IF'
+    EMOTIONAL = 'EM'
+
+    HOW_YOU_LIKE_IT_CHOICES = [
+        (LOVE, 'love'),
+        (DOPE, 'dope'),
+        (INSPIRING, 'inspiring'),
+        (RESPECT, 'respect'),
+        (CUTE, 'cute'),
+        (INFORMATIVE, 'informative'),
+        (EMOTIONAL, 'emotional'),
+    ]
+
+    l_shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="likes_sharing")
+    l_liker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    l_type = models.CharField(
+        max_length=2,
+        choices=HOW_YOU_LIKE_IT_CHOICES,
+        default=LOVE
+    )
+
+class Comments(models.Model):
+    c_shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="comments_sharing")
+    c_commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    c_comment = models.TextField(default="")  # add a validation here.
+    c_time = models.DateTimeField(auto_now=True)
+    # may be here just a like option embedded directly, no types of like.
+
+
+# class SharingMessage(models.Model):
+#     pass
+    # username = fk (User)     : view > if request.user -> MessagePermission (True)
+    # shareid = fk (Sharing)   # : add validation on serializer based on username and trim down the options ( one user has few shares only )
+    # add frontend validation: automatically add shareid, coz u r in detail page.
+    # messagetext = charfield
+"""

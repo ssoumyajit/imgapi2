@@ -1,25 +1,9 @@
 from rest_framework import serializers
-from sharing.models import Sharing, Comments, LikesToSharing, SharingMessage, Learnings, LikesForLearning
-# from user.serializers import UserSerializer
+from sharing.models import Sharing, SharingMessage, Learnings, LikesForLearning, \
+    CommentsForLearning, LoveForSharing, CommentsForSharing
 from user.models import User
 from django_countries.serializers import CountryFieldMixin
 # from rest_framework.validators import UniqueTogetherValidator  # one student can tag a teacher once
-
-
-class LikesToSharingSerializers(serializers.ModelSerializer):
-    l_liker = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
-
-    class Meta:
-        model = LikesToSharing
-        fields = ['id', 'l_shareid', 'l_liker', 'l_type']
-
-
-class CommentSerializers(serializers.ModelSerializer):
-    c_commenter = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
-
-    class Meta:
-        model = Comments
-        fields = ['id', 'c_shareid', 'c_commenter', 'c_comment', 'c_time']
 
 
 class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
@@ -28,14 +12,13 @@ class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
     s_photo = serializers.ImageField(required=True, allow_null=True)
     # s_location = serializers.CharField(required=False, allow_null=True)
     # likes_count = serializers.SerializerMethodField()
-    likes_sharing = LikesToSharingSerializers(many=True, read_only=True)
-    comments_sharing = CommentSerializers(many=True, read_only=True)
+    # likes_sharing = LikesToSharingSerializers(many=True, read_only=True)
+    # comments_sharing = CommentSerializers(many=True, read_only=True)
 
     class Meta:
         model = Sharing
         fields = ['id', 'username', 'teacher', 's_teacher_name', 's_photo', 's_appreciation', 's_video_talk',
-                  's_video_dance', 's_teacher_country', 's_student_country', 's_date', 's_location', 's_teacher_video',
-                  'likes_sharing', 'comments_sharing']
+                  's_video_dance', 's_teacher_country', 's_student_country', 's_date', 's_location', 's_teacher_video', ]
 
 
 class SharingMessageSerializers(serializers.ModelSerializer):
@@ -113,8 +96,55 @@ class LikesForLearningSerializer(serializers.ModelSerializer):
         model = LikesForLearning
         fields = '__all__'
 
-    # add the total likes count to the serialized data
+    # add the total likes count to the serialized data   ----------------
     # def to_representation(self, instance):
         # representation = super().to_representation(instance)
         # representation['likes'] = instance.
 
+
+class CommentsForLearningSerializer(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = CommentsForLearning
+        fields = '__all__'
+
+
+class LoveForSharingSerializer(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = LoveForSharing
+        fields = "__all__"
+
+
+class CommentsForSharingSerializer(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = CommentsForSharing
+        fields = "__all__"
+
+
+
+
+
+
+
+
+"""
+class LikesToSharingSerializers(serializers.ModelSerializer):
+    l_liker = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = LikesToSharing
+        fields = ['id', 'l_shareid', 'l_liker', 'l_type']
+
+
+class CommentSerializers(serializers.ModelSerializer):
+    c_commenter = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = Comments
+        fields = ['id', 'c_shareid', 'c_commenter', 'c_comment', 'c_time']
+"""
