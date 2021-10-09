@@ -133,7 +133,7 @@ class LoveForSharingView(generics.ListCreateAPIView):
         return queryset
 
 
-class LoveForSharingRUDView(generics.ListCreateAPIView):
+class LoveForSharingRUDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LoveForSharingSerializer
     queryset = LoveForSharing.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadonly,)
