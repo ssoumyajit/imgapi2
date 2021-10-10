@@ -7,8 +7,8 @@ router = DefaultRouter()
 app_name = 'gebblesalert'
 
 urlpatterns = [
-    path('', E1T1NotificationsViews.as_view()),
-    path('<int:pk>', E1T1IsSeenUpdateView.as_view()),
+    path('e1t1/', E1T1NotificationsViews.as_view()),
+    path('e1t1/<int:pk>', E1T1IsSeenUpdateView.as_view()),
 
     path('e1t1/learnings/', LearningsNotificationsViews.as_view()),
     path('e1t1/learnings/<int:pk>', LearningsIsSeenUpdateView.as_view()),
