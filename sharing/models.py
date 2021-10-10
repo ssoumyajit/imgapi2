@@ -7,7 +7,7 @@ import time
 import datetime
 import uuid
 
-from gebblesalert.models import E1T1Notification
+from gebblesalert.models import E1T1Notification, LearningsRelatedNotifications
 from django.db.models.signals import post_save
 
 
@@ -36,12 +36,45 @@ class Sharing(models.Model):
     @staticmethod
     def user_tagged_teacher(sender, instance, *args, **kwargs):
         e1t1obj = instance
-        taggedteacher = e1t1obj.teacher
-        self = e1t1obj.username
-        notify = E1T1Notification(e1t1object=e1t1obj, sender=self, receiver=taggedteacher)
+        touser = e1t1obj.teacher
+        fromuser = e1t1obj.username
+        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=3)
         notify.save()
 
-post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)
+
+class LoveForSharing(models.Model):
+    # love for sharing ~ lfs
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lfsuser", blank=False)
+    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="lfsid")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def user_loved_your_learning(sender, instance, *args, **kwargs):
+        loveobj = instance
+        fromuser = loveobj.username
+        touser = loveobj.shareidobj.username
+        e1t1obj = loveobj.shareidobj
+
+        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=1)
+        notify.save()
+
+
+class CommentsForSharing(models.Model):
+    # comments for sharing ~ cfs
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cfsuser", blank=False)
+    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="cfsid")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField(default="")  # add a validation here.
+
+    @staticmethod
+    def user_commented_your_learning(sender, instance, *args, **kwargs):
+        commentobj = instance
+        fromuser = commentobj.username
+        touser = commentobj.shareidobj.username
+        e1t1obj = commentobj.shareidobj
+
+        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=2)
+        notify.save()
 
 
 class SharingMessage(models.Model):
@@ -58,6 +91,18 @@ class Learnings(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     video = models.FileField(default="", upload_to="sharing/videos/")
     videouploaded = models.BooleanField(default=False)
+
+    @staticmethod
+    def user_tagged_teacher_learning(sender, instance, *args, **kwargs):
+        learningobj = instance
+        fromuser = learningobj.username
+        touser = learningobj.shareidobj.teacher
+
+        if touser is not None:
+            # this condition is to check if a student has tagged the teacher in the 1st place while sharing her teacher.
+            notify = LearningsRelatedNotifications(learningobject=learningobj, sender=fromuser, receiver=touser,
+                                                   notification_type=3)
+            notify.save()
 
 
 class LikesForLearning(models.Model):
@@ -81,6 +126,16 @@ class LikesForLearning(models.Model):
     )
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    @staticmethod
+    def user_liked_learning(sender, instance, *args, **kwargs):
+        likeobj = instance   # an instance of like object
+        fromuser = likeobj.username
+        touser = likeobj.learningidobj.username
+        learningobject = likeobj.learningidobj
+
+        notify = LearningsRelatedNotifications(learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=1)
+        notify.save()
+
 
 class CommentsForLearning(models.Model):
 
@@ -90,23 +145,23 @@ class CommentsForLearning(models.Model):
     comment = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    @staticmethod
+    def user_commented_learning(sender, instance, *args, **kwargs):
+        commentobj = instance
+        fromuser = commentobj.username
+        touser = commentobj.learningobj.username
+        learningobject = commentobj.learningidobj
 
-class LoveForSharing(models.Model):
-    # love for sharing ~ lfs
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="lfsuser", blank=False)
-    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="lfsid")
-    timestamp = models.DateTimeField(auto_now_add=True)
+        notify = LearningsRelatedNotifications(learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=2)
+        notify.save()
 
+post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)
+post_save.connect(LoveForSharing.user_loved_your_learning, sender=LoveForSharing)
+post_save.connect(CommentsForSharing.user_commented_your_learning, sender=CommentsForSharing)
 
-class CommentsForSharing(models.Model):
-    # comments for sharing ~ cfs
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cfsuser", blank=False)
-    shareidobj = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="cfsid")
-    timestamp = models.DateTimeField(auto_now_add=True)
-    comment = models.TextField(default="")  # add a validation here.
-
-
-
+post_save.connect(LikesForLearning.user_liked_learning, sender=LikesForLearning)
+post_save.connect(CommentsForLearning.user_commented_learning, sender=CommentsForLearning)
+post_save.connect(Learnings.user_tagged_teacher_learning, sender=Learnings)
 
 
 
