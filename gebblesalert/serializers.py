@@ -30,13 +30,13 @@ class LearningsRelatedNotificationsSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = LearningsRelatedNotifications
-        fields = ['id', 'learningobject', 'sender', 'receiver', 'notification_type', 'text', 'time', 'is_seen']
+        fields = ['id', 'e1t1object', 'learningobject', 'sender', 'receiver', 'notification_type', 'text', 'time', 'is_seen']
 
 
 class LearningsRelatedNotificationsIsSeenUpdateOnlySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = LearningsRelatedNotifications
-        fields = ['id', 'learningobject', 'sender', 'receiver', 'notification_type', 'text', 'time', 'is_seen']
-        read_only_fields = ['id', 'learningobject', 'sender', 'receiver', 'notification_type', 'text']
+        fields = ['id', 'e1t1object', 'learningobject', 'sender', 'receiver', 'notification_type', 'text', 'time', 'is_seen']
+        read_only_fields = ['id', 'e1t1object', 'learningobject', 'sender', 'receiver', 'notification_type', 'text']
 

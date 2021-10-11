@@ -97,10 +97,11 @@ class Learnings(models.Model):
         learningobj = instance
         fromuser = learningobj.username
         touser = learningobj.shareidobj.teacher
+        e1t1obj = learningobj.shareidobj
 
         if touser is not None:
             # this condition is to check if a student has tagged the teacher in the 1st place while sharing her teacher.
-            notify = LearningsRelatedNotifications(learningobject=learningobj, sender=fromuser, receiver=touser,
+            notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobj, sender=fromuser, receiver=touser,
                                                    notification_type=3)
             notify.save()
 
@@ -132,8 +133,9 @@ class LikesForLearning(models.Model):
         fromuser = likeobj.username
         touser = likeobj.learningidobj.username
         learningobject = likeobj.learningidobj
+        e1t1obj = likeobj.learningidobj.shareidobj
 
-        notify = LearningsRelatedNotifications(learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=1)
+        notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=1)
         notify.save()
 
 
@@ -151,8 +153,9 @@ class CommentsForLearning(models.Model):
         fromuser = commentobj.username
         touser = commentobj.learningobj.username
         learningobject = commentobj.learningidobj
+        e1t1obj = commentobj.learningidobj.shareidobj
 
-        notify = LearningsRelatedNotifications(learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=2)
+        notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=2)
         notify.save()
 
 post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)

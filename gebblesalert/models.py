@@ -6,6 +6,8 @@ from django.conf import settings
 # every learning instance. Hence just keep a notification_type variable to
 # mark them.
 
+# related_name should be in plural. coz it always returns multiple values !!
+
 
 class E1T1Notification(models.Model):
     NOTIFICATION_TYPES = ((1, 'Love'), (2, 'Comment'), (3, 'e1t1_creation'))
@@ -22,6 +24,7 @@ class E1T1Notification(models.Model):
 class LearningsRelatedNotifications(models.Model):
     NOTIFICATION_TYPES = ((1, 'Like'), (2, 'Comment'), (3, 'learning_creation'))
 
+    e1t1object = models.ForeignKey('sharing.Sharing', on_delete=models.CASCADE, related_name="e1t1objectoflearning")
     learningobject = models.ForeignKey('sharing.Learnings', on_delete=models.CASCADE, related_name="notilearningobj")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifromuser_learning_like_comment")
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notitouser_learning_like_comment")
