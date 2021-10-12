@@ -151,7 +151,7 @@ class CommentsForLearning(models.Model):
     def user_commented_learning(sender, instance, *args, **kwargs):
         commentobj = instance
         fromuser = commentobj.username
-        touser = commentobj.learningobj.username
+        touser = commentobj.learningidobj.username
         learningobject = commentobj.learningidobj
         e1t1obj = commentobj.learningidobj.shareidobj
 
