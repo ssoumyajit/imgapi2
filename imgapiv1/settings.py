@@ -230,3 +230,9 @@ COVER_THUMBNAIL_SIZE = (200, 100)
 # django_heroku.settings(locals())
 
 
+"""
+important helps :
+
+- go to django admin -> sites and add localhost:8000 as site address, needed for password reset 
+
+"""
