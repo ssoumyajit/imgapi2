@@ -4,6 +4,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from user.models import GENDER_SELECTION, User
 # from django_countries.serializers import CountryFieldMixin
 from django_countries.serializer_fields import CountryField  # for low level usage
+from dj_rest_auth.serializers import PasswordResetSerializer
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -34,8 +35,11 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ('pk', 'email', 'gender', 'username', 'country')
 
 
-
-
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    def get_email_options(self):
+        return {
+            'html_email_template_name': 'registration/password_reset_email.html',
+        }
 
 
 

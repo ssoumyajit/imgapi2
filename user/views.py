@@ -35,6 +35,13 @@ class ApiPasswordResetView(View):
             reverse_lazy('account_reset_password_from_key', args=[uidb36, token])
         )
 
+# https://www.rootstrap.com/blog/how-to-change-the-rest-auth-reset-password-email-to-a-custom-html-template/
+# above article helped with dj_rest_auth password reset email templates.
+# also allauth docs is very helpful. DO check for the project level variables that u can use
+# u need some of them like resend email confirmation, deactivate it after 3 days etc.
+
+
+
 
 """
 from django.shortcuts import render

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'groups',
     'inquiry',
     'gebblesalert',
+
 ]
 
 SITE_ID = 1
@@ -117,7 +118,7 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'imgapiv1-2/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -205,7 +206,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'inmygroovelifestyle@gmail.com'
 EMAIL_HOST_PASSWORD = 'waternapkincypher'
 
-CUSTOM_PASSWORD_RESET_CONFIRM = 'http://localhost:8000/api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/'
+# CUSTOM_PASSWORD_RESET_CONFIRM = 'http://localhost:8000/api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/'
+# check if without above line, the project works !! i checked, it is of no need.
+# the apipasswordresetconfirmview takes care of it.
+
 
 AUTH_USER_MODEL = 'user.User'  # 'nameOfApp.Model'
 REST_AUTH_REGISTER_SERIALIZERS = {
@@ -214,6 +218,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'user.serializers.CustomUserDetailsSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'user.serializers.CustomPasswordResetSerializer'
 }
 
 # dj_rest_auth password change
