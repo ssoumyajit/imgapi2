@@ -46,6 +46,9 @@ class NotificationsE1T1(models.Model):
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifromuserobject")
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notitouserobject")
+    receiver2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notitouser2object", null=True)  # null=True coz
+    # for Private Chat, we do not send the notification back to the writer whoever it might be; teacher or student !!
+
     text = models.CharField(max_length=100, default='')
     time = models.DateTimeField(auto_now_add=True)
     notification_context = models.IntegerField(choices=NOTIFICATION_CONTEXTS)

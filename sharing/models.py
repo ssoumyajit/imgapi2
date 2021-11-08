@@ -39,8 +39,9 @@ class Sharing(models.Model):
     def user_tagged_teacher(sender, instance, *args, **kwargs):
         e1t1obj = instance
         touser = e1t1obj.teacher
+        touser2 = e1t1obj.username
         fromuser = e1t1obj.username
-        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=1)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, receiver2=touser2, notification_context=1, notification_type=1)
         notify.save()
 
 
@@ -55,9 +56,10 @@ class LoveForSharing(models.Model):
         loveobj = instance
         fromuser = loveobj.username
         touser = loveobj.shareidobj.username
+        touser2 = loveobj.shareidobj.teacher
         e1t1obj = loveobj.shareidobj
 
-        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=2)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, receiver2=touser2, notification_context=1, notification_type=2)
         notify.save()
 
 
@@ -73,9 +75,10 @@ class CommentsForSharing(models.Model):
         commentobj = instance
         fromuser = commentobj.username
         touser = commentobj.shareidobj.username
+        touser2 = commentobj.shareidobj.teacher
         e1t1obj = commentobj.shareidobj
 
-        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=3)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser,receiver2=touser2, notification_context=1, notification_type=3)
         notify.save()
 
 
@@ -92,12 +95,13 @@ class Learnings(models.Model):
         learningobj = instance
         fromuser = learningobj.username
         touser = learningobj.shareidobj.teacher
+        touser2 = learningobj.username
         e1t1obj = learningobj.shareidobj
 
         if touser is not None:
             # this condition is to check if a student has tagged the teacher in the 1st place while sharing her teacher.
             notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobj, sender=fromuser, receiver=touser,
-                                                   notification_context=2, notification_type=1)
+                                                   receiver2=touser2, notification_context=2, notification_type=1)
             notify.save()
 
 
@@ -127,11 +131,12 @@ class LikesForLearning(models.Model):
         likeobj = instance   # an instance of like object
         fromuser = likeobj.username
         touser = likeobj.learningidobj.username
+        touser2 = likeobj.learningidobj.shareidobj.teacher
         learningobject = likeobj.learningidobj
         e1t1obj = likeobj.learningidobj.shareidobj
 
         notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser,
-                                               receiver=touser, notification_context=2, notification_type=2)
+                                receiver=touser, receiver2=touser2, notification_context=2, notification_type=2)
         notify.save()
 
 
@@ -148,11 +153,12 @@ class CommentsForLearning(models.Model):
         commentobj = instance
         fromuser = commentobj.username
         touser = commentobj.learningidobj.username
+        touser2 = commentobj.learningidobj.shareidobj.teacher
         learningobject = commentobj.learningidobj
         e1t1obj = commentobj.learningidobj.shareidobj
 
         notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser,
-                                               receiver=touser, notification_context=2, notification_type=3)
+                                receiver=touser, receiver2=touser2, notification_context=2, notification_type=3)
         notify.save()
 
 

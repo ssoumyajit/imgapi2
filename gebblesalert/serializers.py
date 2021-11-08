@@ -49,6 +49,8 @@ class NotificationsE1T1Serializers(serializers.ModelSerializer):
                                           allow_null=True)
     receiver = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username', required=True,
                                             allow_null=True)
+    receiver2 = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username', required=False,
+                                            allow_null=True)
     # e1t1object = serializers.PrimaryKeyRelatedField(queryset=Sharing.objects.all())
     learningobject = serializers.PrimaryKeyRelatedField(queryset=Learnings.objects.all(), required=False, allow_null=True)
     # can I still filter it based, which E1T1 instance !!
@@ -58,7 +60,7 @@ class NotificationsE1T1Serializers(serializers.ModelSerializer):
     # Write a serializer validation based on which E1T1 instance:
     class Meta:
         model = NotificationsE1T1
-        fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'notification_type',
+        fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'receiver2', 'notification_type',
                   'notification_context', 'text', 'time', 'is_seen']
 
 
@@ -66,8 +68,8 @@ class NotificationsE1T1IsSeenUpdateOnlySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = NotificationsE1T1
-        fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'notification_type',
+        fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'receiver2', 'notification_type',
                   'notification_context', 'text', 'time', 'is_seen']
-        read_only_fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'notification_type',
+        read_only_fields = ['id', 'e1t1object', 'learningobject', 'chatobject', 'sender', 'receiver', 'receiver2', 'notification_type',
                   'notification_context', 'text']
 

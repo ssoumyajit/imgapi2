@@ -6,7 +6,6 @@ from .models import NotificationsE1T1
 #    NotificationsE1T1Serializers, NotificationsE1T1IsSeenUpdateOnlySerializers
 from .serializers import NotificationsE1T1Serializers
 from rest_framework.permissions import IsAuthenticated
-from permissions import IsOwnerOrReadonly
 from django.db.models import Q
 
 '''
@@ -62,7 +61,8 @@ class NotificationsE1T1ListCreateView(generics.ListCreateAPIView):
         queryset = NotificationsE1T1.objects.all()
         receiver = self.request.query_params.get('receiver', None)
         if receiver is not None:
-            queryset = queryset.filter(receiver__username=receiver)
+            # queryset = queryset.filter(receiver__username=receiver)
+            queryset = queryset.filter(Q(receiver__username=receiver) | Q(receiver2__username=receiver))
         return queryset
 
 
