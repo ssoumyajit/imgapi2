@@ -17,8 +17,8 @@ class SharingSerializers(CountryFieldMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Sharing
-        fields = ['id', 'username', 'teacher', 's_teacher_name', 's_photo', 's_appreciation', 's_video_talk',
-                  's_video_dance', 's_teacher_country', 's_student_country', 's_date', 's_location', 's_teacher_video', ]
+        fields = ['id', 'username', 'teacher', 's_teacher_name', 's_photo', 's_appreciation', 's_learnings',
+                  's_teacher_country', 's_student_country', 's_date', 's_location', 's_teacher_video', ]
 
 
 class SharingMessageSerializers(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class SharingMessageSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SharingMessage
-        fields = ['username', 'shareid', 'messagetext', 'created']
+        fields = ['id', 'username', 'shareid', 'messagetext', 'created']
 
 
 class LearningsSerializers(serializers.ModelSerializer):

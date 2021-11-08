@@ -8,7 +8,7 @@ from django.conf import settings
 
 # related_name should be in plural. coz it always returns multiple values !!
 
-
+'''
 class E1T1Notification(models.Model):
     NOTIFICATION_TYPES = ((1, 'Love'), (2, 'Comment'), (3, 'e1t1_creation'))
     
@@ -32,5 +32,25 @@ class LearningsRelatedNotifications(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)
     is_seen = models.BooleanField(default=False)
+'''
+
+
+class NotificationsE1T1(models.Model):
+    NOTIFICATION_CONTEXTS = ((1, 'e1t1'), (2, 'learnings'), (3, 'private_messages'))
+    NOTIFICATION_TYPES = ((1, 'creation'), (2, 'like'), (3, 'comment'))  # what kind of like resides in corresponding Like model'), (2, 'like'), (3, ''))  # what kind of like residing in corresponding Like model
+
+    e1t1object = models.ForeignKey('sharing.Sharing', on_delete=models.CASCADE, related_name="notie1t1object")  # mandatory
+
+    learningobject = models.ForeignKey('sharing.Learnings', on_delete=models.CASCADE, related_name="notilearningobject", null=True)
+    chatobject = models.ForeignKey('sharing.SharingMessage', on_delete=models.CASCADE, related_name="notichatobject", null=True)
+
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifromuserobject")
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notitouserobject")
+    text = models.CharField(max_length=100, default='')
+    time = models.DateTimeField(auto_now_add=True)
+    notification_context = models.IntegerField(choices=NOTIFICATION_CONTEXTS)
+    notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)  # added later, so migrate again
+    is_seen = models.BooleanField(default=False)
+
 
 

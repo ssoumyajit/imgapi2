@@ -7,7 +7,8 @@ import time
 import datetime
 import uuid
 
-from gebblesalert.models import E1T1Notification, LearningsRelatedNotifications
+# from gebblesalert.models import E1T1Notification, LearningsRelatedNotifications, NotificationsE1T1
+from gebblesalert.models import NotificationsE1T1
 from django.db.models.signals import post_save
 
 
@@ -22,8 +23,9 @@ class Sharing(models.Model):
     s_student_country = CountryField(default="", blank=True)
     s_photo = models.ImageField(default="", upload_to="sharing/")
     s_appreciation = models.TextField(default="")  # 1 line = 8 words, 20 lines to cover up the image
-    s_video_talk = models.FileField(default="", upload_to="talk/")
-    s_video_dance = models.FileField(default="", upload_to="dance/")
+    s_learnings = models.TextField(default="")
+    # s_video_talk = models.FileField(default="", upload_to="talk/")
+    # s_video_dance = models.FileField(default="", upload_to="dance/")
     s_date = models.DateField(auto_now=True)  # keeping track of the user's posting time.
     s_location = models.CharField(default="", max_length=255)
     s_teacher_video = models.URLField(default="", max_length=255, blank=True)
@@ -38,7 +40,7 @@ class Sharing(models.Model):
         e1t1obj = instance
         touser = e1t1obj.teacher
         fromuser = e1t1obj.username
-        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=3)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=1)
         notify.save()
 
 
@@ -55,7 +57,7 @@ class LoveForSharing(models.Model):
         touser = loveobj.shareidobj.username
         e1t1obj = loveobj.shareidobj
 
-        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=1)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=2)
         notify.save()
 
 
@@ -73,15 +75,8 @@ class CommentsForSharing(models.Model):
         touser = commentobj.shareidobj.username
         e1t1obj = commentobj.shareidobj
 
-        notify = E1T1Notification(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_type=2)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, sender=fromuser, receiver=touser, notification_context=1, notification_type=3)
         notify.save()
-
-
-class SharingMessage(models.Model):
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna", null=True)
-    shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null=True)
-    messagetext = models.TextField(default='')
-    created = models.DateTimeField(auto_now=True)
 
 
 class Learnings(models.Model):
@@ -101,8 +96,8 @@ class Learnings(models.Model):
 
         if touser is not None:
             # this condition is to check if a student has tagged the teacher in the 1st place while sharing her teacher.
-            notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobj, sender=fromuser, receiver=touser,
-                                                   notification_type=3)
+            notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobj, sender=fromuser, receiver=touser,
+                                                   notification_context=2, notification_type=1)
             notify.save()
 
 
@@ -135,7 +130,8 @@ class LikesForLearning(models.Model):
         learningobject = likeobj.learningidobj
         e1t1obj = likeobj.learningidobj.shareidobj
 
-        notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=1)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser,
+                                               receiver=touser, notification_context=2, notification_type=2)
         notify.save()
 
 
@@ -155,8 +151,35 @@ class CommentsForLearning(models.Model):
         learningobject = commentobj.learningidobj
         e1t1obj = commentobj.learningidobj.shareidobj
 
-        notify = LearningsRelatedNotifications(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser, receiver=touser, notification_type=2)
+        notify = NotificationsE1T1(e1t1object=e1t1obj, learningobject=learningobject, sender=fromuser,
+                                               receiver=touser, notification_context=2, notification_type=3)
         notify.save()
+
+
+class SharingMessage(models.Model):
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="qna", null=True)
+    shareid = models.ForeignKey('Sharing', on_delete=models.CASCADE, related_name="qnaid", null=True)
+    messagetext = models.TextField(default='')
+    created = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def chat(sender, instance, *args, **kwargs):
+        chatobj = instance
+        fromuser = chatobj.username
+
+        if fromuser == chatobj.shareid.username:
+            touser = chatobj.shareid.teacher
+        else:
+            touser = chatobj.shareid.username
+
+        e1t1obj = chatobj.shareid
+
+        if touser is not None:
+            # this condition is to check if a student has tagged the teacher in the 1st place while sharing her teacher.
+            notify = NotificationsE1T1(e1t1object=e1t1obj, chatobject=chatobj, sender=fromuser,
+                                                   receiver=touser, notification_context=3, notification_type=1)
+            notify.save()
+
 
 post_save.connect(Sharing.user_tagged_teacher, sender=Sharing)
 post_save.connect(LoveForSharing.user_loved_your_learning, sender=LoveForSharing)
@@ -165,6 +188,8 @@ post_save.connect(CommentsForSharing.user_commented_your_learning, sender=Commen
 post_save.connect(LikesForLearning.user_liked_learning, sender=LikesForLearning)
 post_save.connect(CommentsForLearning.user_commented_learning, sender=CommentsForLearning)
 post_save.connect(Learnings.user_tagged_teacher_learning, sender=Learnings)
+
+post_save.connect(SharingMessage.chat, sender=SharingMessage)
 
 
 

@@ -48,10 +48,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'dj_rest_auth',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'dj_rest_auth',
     'dj_rest_auth.registration',
 
     'user',
@@ -118,7 +118,7 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'imgapi2/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -200,12 +200,15 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 LOGIN_URL = 'http://localhost:8000/api/v1/auth/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'inmygroovelifestyle@gmail.com'
-EMAIL_HOST_PASSWORD = 'waternapkincypher'
-
+EMAIL_HOST_USER = 'gebblesarts@gmail.com'
+EMAIL_HOST_PASSWORD = 'Passthehiphop'
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = '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'
 # CUSTOM_PASSWORD_RESET_CONFIRM = 'http://localhost:8000/api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/'
 # check if without above line, the project works !! i checked, it is of no need.
 # the apipasswordresetconfirmview takes care of it.

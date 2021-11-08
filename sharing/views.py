@@ -162,8 +162,6 @@ class CommentsForSharingRUDView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-
-
 """
 '''
 class SharingViewSets(viewsets.ModelViewSet):

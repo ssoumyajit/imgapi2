@@ -38,7 +38,8 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
 class CustomPasswordResetSerializer(PasswordResetSerializer):
     def get_email_options(self):
         return {
-            'html_email_template_name': 'registration/password_reset_email.html',
+            # 'html_email_template_name': 'registration/password_reset_email.html',
+            'email_template_name': 'registration/password_reset_email.html',
         }
 
 

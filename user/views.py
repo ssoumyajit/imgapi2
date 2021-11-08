@@ -29,7 +29,7 @@ class ApiPasswordResetView(View):
             else:
                 token = None
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return Http404()
+            return Http404()       # it should be raise Http404 !!
         # redirect to Allauth password reset link
         return HttpResponseRedirect(
             reverse_lazy('account_reset_password_from_key', args=[uidb36, token])

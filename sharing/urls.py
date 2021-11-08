@@ -26,5 +26,5 @@ urlpatterns = [
     path('learnings/likes/', LikesForLearningView.as_view()),
     path('learnings/likes/<int:pk>', LikesForLearningRUDView.as_view()),
     path('learnings/comments/', CommentsForLearningView.as_view()),
-    path('learnings/comments/<int:pk>', CommentsForLearningRUDView.as_view()),
+    path('learnings/comments/<int:pk>', CommentsForLearningRUDView.as_view())
 ]
