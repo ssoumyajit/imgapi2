@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from dj_rest_auth.registration.views import VerifyEmailView, ConfirmEmailView
-from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
+from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView, LoginView, LogoutView, PasswordChangeView
 from user.views import ApiPasswordResetView
 
 
@@ -26,25 +26,31 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     # path('api/v1/', include(router.urls)),
-    path('api/v1/auth/', include('dj_rest_auth.urls')),
+    path('api/v1/auth/', include('dj_rest_auth.urls')),  # this calls that /user endpoint and generates frontend console error
+
+
+    path('api/v1/auth/password/reset/confirm/<uidb64>/<token>/',
+          ApiPasswordResetView.as_view(),
+          name='password_reset_confirm'),
     path('api/v1/auth/registration/account-confirm-email/<str:key>/', ConfirmEmailView.as_view(),),
     # path('api/v1/auth/registration/resend-email/'),
     path('api/v1/auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/v1/auth/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
 
+    path('api/v1/auth/login/', LoginView.as_view(), name='rest_login'),
+    path('api/v1/auth/logout/', LogoutView.as_view(), name='rest_logout'),
+    path('api/v1/auth/password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     # this path is used to generate email content for password reset request
     # from dj-rest-auth API; format is same as used by default django auth so
     # the generated URL must be translated to be used with allauth
 
-    path('api/v1/auth/password/reset/confirm/<uidb64>/<token>/',
-          ApiPasswordResetView.as_view(),
-          name='password_reset_confirm'),
+
     path('api/v1/accounts/', include('allauth.urls')),
 
     # path('api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/',
     # PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('api/v1/auth/password/reset/', PasswordResetView.as_view()),
-    # path('api/v1/user/', include('user.urls')),
+
     path('api/v1/artist/', include('artist.urls')),
     path('api/v1/e1t1/', include('sharing.urls')),
     path('api/v1/inquiry/', include('inquiry.urls')),

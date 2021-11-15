@@ -132,6 +132,22 @@ class UpcomingEventManager(models.Manager):
 
 
 class Journey(models.Model):
+    # two lettered notations are the actual entities that will be
+    # stored in the db.
+
+    CASUAL = 'ca'
+    EVENT = 'ev'
+    WORKSHOP = 'wo'
+    JUDGING = 'ju'
+    MUSIC = 'mu'
+
+    JOURNEY_TAG_CHOICES = [
+        (EVENT, 'event'),
+        (CASUAL, 'notagjustcasual'),
+        (WORKSHOP, 'workshop'),
+        (JUDGING, 'judging'),
+        (MUSIC, 'music')
+    ]
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # must
     joevent = models.CharField(max_length=255, default="", blank=False)  # must
     jophoto1 = models.ImageField(default="", upload_to="events_attended/", blank=False)  # must
@@ -146,6 +162,11 @@ class Journey(models.Model):
     isprivate = models.BooleanField(default=False)
     objects = models.Manager()
     upcoming_objects = UpcomingEventManager()
+    journeytag = models.CharField(
+        max_length=2,
+        choices=JOURNEY_TAG_CHOICES,
+        default=CASUAL,
+    )
 
     '''
     @property

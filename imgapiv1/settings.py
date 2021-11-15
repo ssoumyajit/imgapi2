@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'groups',
     'inquiry',
     'gebblesalert',
+    'django_extensions'
 
 ]
 
@@ -177,6 +179,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+# foe generating the django model tree.png
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -194,19 +201,20 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # 'mandatory' otherwise
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # None otherwise
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 LOGIN_URL = 'http://localhost:8000/api/v1/auth/login'
-
+# LOGIN_URL = 'https://2t580xq9u5.execute-api.us-east-2.amazonaws.com/dev/api/v1/auth/login'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'gebblesarts@gmail.com'
-EMAIL_HOST_PASSWORD = 'Passthehiphop'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')
+
 # EMAIL_HOST_USER = 'apikey'
 # EMAIL_HOST_PASSWORD = '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'
 # CUSTOM_PASSWORD_RESET_CONFIRM = 'http://localhost:8000/api/v1/auth/password/reset/confirm/<slug:uidb64>/<slug:token>/'
