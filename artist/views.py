@@ -1,7 +1,7 @@
 # from django.shortcuts import render
-from .models import Artist, ArtistData, Journey, Work
+from .models import Artist, ArtistData, Journey, PhotoForJourney, Work
 from .serializers import ArtistSerializers, ArtistDataSerializers, JourneySerializers, JourneyListSerializers, \
-    WorkSerializers, ArtistListSerializers
+    WorkSerializers, ArtistListSerializers, PhotoForJourneySerializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from permissions import IsOwnerOrReadonly
 from rest_framework import generics
@@ -165,6 +165,32 @@ class UpcomingEvents(generics.ListAPIView):
                 queryset = queryset.filter(isprivate=False)
                 return queryset
         return queryset
+
+
+class PhotoForJourneyCreateViews(generics.CreateAPIView):
+    serializer_class = PhotoForJourneySerializers
+    permission_classes = (IsAuthenticated,)
+
+
+class PhotoForJourneyListViews(generics.ListAPIView):
+    serializer_class = PhotoForJourneySerializers
+
+    def get_queryset(self):
+        queryset = PhotoForJourney.objects.all()
+        username = self.request.query_params.get('username', None)
+        jid = self.request.query_params.get('jid', None)
+
+        if username is not None and jid is not None:
+            queryset = queryset.filter(username__username=username)
+            queryset = queryset.filter(jid__id=jid)
+            return queryset
+        return queryset
+
+
+class PhotoForJourneyRUDViews(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PhotoForJourneySerializers
+    queryset = PhotoForJourney.objects.all()
+    permission_classes = (IsOwnerOrReadonly,)
 
 
 class WorkListCreateViews(generics.ListCreateAPIView):

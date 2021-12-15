@@ -41,8 +41,8 @@ class NotificationsE1T1(models.Model):
 
     e1t1object = models.ForeignKey('sharing.Sharing', on_delete=models.CASCADE, related_name="notie1t1object")  # mandatory
 
-    learningobject = models.ForeignKey('sharing.Learnings', on_delete=models.CASCADE, related_name="notilearningobject", null=True)
-    chatobject = models.ForeignKey('sharing.SharingMessage', on_delete=models.CASCADE, related_name="notichatobject", null=True)
+    learningobject = models.ForeignKey('sharing.Learnings', on_delete=models.CASCADE, related_name="notilearningobject", null=True, blank=False)
+    chatobject = models.ForeignKey('sharing.SharingMessage', on_delete=models.CASCADE, related_name="notichatobject", null=True, blank=False)
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifromuserobject")
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notitouserobject")

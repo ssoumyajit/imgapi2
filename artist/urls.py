@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import ArtistCreateViews, ArtistListViews, ArtistRetrieveUpdateDestroyViews, ArtistDataCreateViews, ArtistDataRetrieveUpdateDestroyViews, \
                    JourneyCreateViews, JourneyRUDViews, JourneyListViews, \
-                   WorkListCreateViews, WorkRUDViews, UpcomingEvents
+                   WorkListCreateViews, WorkRUDViews, UpcomingEvents, PhotoForJourneyCreateViews, \
+                   PhotoForJourneyListViews, PhotoForJourneyRUDViews
 from rest_framework.urlpatterns import format_suffix_patterns
 
 # app_name = 'artist'
@@ -17,6 +18,9 @@ urlpatterns = [
     path('journey/<int:pk>', JourneyRUDViews.as_view()),
     path('journey/upcomingevents/', UpcomingEvents.as_view()),
     path('journey/list/', JourneyListViews.as_view()),
+    path('jphotos/', PhotoForJourneyCreateViews.as_view()),
+    path('jphotos/list/', PhotoForJourneyListViews.as_view()),
+    path('jphotos/<int:pk>', PhotoForJourneyRUDViews.as_view()),
     path('works/', WorkListCreateViews.as_view()),
     path('works/<int:pk>', WorkRUDViews.as_view())
 ]

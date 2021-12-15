@@ -6,6 +6,7 @@ from .models import NotificationsE1T1
 #    NotificationsE1T1Serializers, NotificationsE1T1IsSeenUpdateOnlySerializers
 from .serializers import NotificationsE1T1Serializers
 from rest_framework.permissions import IsAuthenticated
+from permissions import IsOwnerOrReadonlyNotificationsE1T1
 from django.db.models import Q
 
 '''
@@ -17,7 +18,7 @@ class E1T1NotificationsViews(generics.ListCreateAPIView):
         queryset = E1T1Notification.objects.all()
         receiver = self.request.query_params.get('receiver', None)  # receiver keyword goes to the URL
         if receiver is not None:
-            queryset = queryset.filter(Q(receiver__username=receiver))
+            queryset = queryset.filter(receiver__username=receiver).order_by('-time')
         return queryset
 
 
@@ -69,7 +70,7 @@ class NotificationsE1T1ListCreateView(generics.ListCreateAPIView):
 class NotificationsE1T1IsSeenUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = NotificationsE1T1.objects.all()
     serializer_class = NotificationsE1T1Serializers
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadonlyNotificationsE1T1, ]
 
 # there must be something in the backend to delete the notification instances once in a while ( may be a month )
 # so that the query is faster. may be we can restrict based on time stamp, query only from the notifications last month.

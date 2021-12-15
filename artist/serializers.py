@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Artist, ArtistData, Journey, Work
+from .models import Artist, ArtistData, Journey, Work, PhotoForJourney
 from .models import STYLES_CHOICES
 from user.models import User
 from django_countries.serializers import CountryFieldMixin
@@ -68,6 +68,16 @@ class JourneyListSerializers(serializers.ModelSerializer):
         model = Journey
         fields = ['id', 'username', 'joevent', 'jodate', 'jophoto1', 'isprivate', 'ishighlight', 'journeytag']
         read_only_fields = ['id', 'username', 'joevent', 'jodate', 'jophoto1', 'isprivate', 'ishighlight', 'journeytag']
+
+
+class PhotoForJourneySerializers(serializers.ModelSerializer):
+    username = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username', required=True, allow_null=True)
+    jid = serializers.PrimaryKeyRelatedField(queryset=Journey.objects.all(), required=True, allow_null=True)
+    jphoto = serializers.ImageField(required=True, allow_null=True)
+
+    class Meta:
+        model = PhotoForJourney
+        fields = "__all__"
 
 
 class WorkSerializers(serializers.ModelSerializer):

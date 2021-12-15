@@ -181,8 +181,11 @@ class Journey(models.Model):
         photo.thumbnail((240, 180), Image.ANTIALIAS)
         photo.save(self.jophoto1.path, optimize=True, quality=90)
 
-    def __str__(self):
-        return self.jodate
+
+class PhotoForJourney(models.Model):
+    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    jid = models.ForeignKey(Journey, on_delete=models.CASCADE)
+    jphoto = models.ImageField(default="", upload_to='jphotos/')
 
 
 class Work(models.Model):

@@ -212,8 +212,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER='gebblesarts@gmail.com'
+EMAIL_HOST_PASSWORD='Passthehiphop'
 
 # EMAIL_HOST_USER = 'apikey'
 # EMAIL_HOST_PASSWORD = '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'
@@ -239,7 +241,7 @@ OLD_PASSWORD_FIELD_ENABLED = True
 
 COVER_THUMBNAIL_SIZE = (200, 100)
 # django_heroku.settings(locals())
-
+print("base dir path:", BASE_DIR)
 
 """
 important helps :
