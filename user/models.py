@@ -2,6 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_countries.fields import CountryField
 
+# --- for django-rest-passwordreset
+from django.dispatch import receiver
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.core.mail import send_mail
+
+from imgapiv1.constants import site_url, site_shortcut_name, site_full_name
+# ---
+
 GENDER_SELECTION = [
     ('M', 'Male'),
     ('F', 'Female'),
@@ -13,7 +24,68 @@ class User(AbstractUser):
     gender = models.CharField(max_length=20, choices=GENDER_SELECTION, default='NS')
     country = CountryField(default="")
 
+# -----------------------------------------------------
 
+'''
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "gebblesarts@gmail.com",
+        # to:
+        [reset_password_token.user.email]
+    )
+'''
+
+class CustomPasswordResetView:
+
+    @receiver(reset_password_token_created)
+    def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+        """
+        Handles password reset tokens
+        When a token is created, an e-mail needs to be sent to the user
+        :param sender: View Class that sent the signal
+        :param instance: View Instance that sent the signal
+        :param reset_password_token: Token Model Object
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        
+        # send an email to the user
+        context = {
+            'current_user': reset_password_token.user,
+            'username': reset_password_token.user.username,
+            'email' : reset_password_token.user.email,
+            'reset_password_url' : "{}/reset/{}".format("gebbles.art", reset_password_token.key),
+            'site_name': site_shortcut_name,
+            'site_domain': site_url
+        }
+    
+        # render email text
+        email_html_message = render_to_string('email/user_reset_password.html', context)
+        email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+    
+        msg = EmailMultiAlternatives(
+            # title:
+            "password reset for {}".format(site_full_name),
+            # message:
+            email_plaintext_message,
+            # from:
+            "gebblesarts@gmail.com",
+            # to:
+            [reset_password_token.user.email]
+    
+        )
+        msg.attach_alternative(email_plaintext_message, "text/html")
+        msg.send()
 
 
 

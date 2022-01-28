@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from dj_rest_auth.registration.views import VerifyEmailView, ConfirmEmailView
 from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView, LoginView, LogoutView, PasswordChangeView
-from user.views import ApiPasswordResetView
+# from user.views import ApiPasswordResetView
 
 
 urlpatterns = [
@@ -29,9 +29,9 @@ urlpatterns = [
     path('api/v1/auth/', include('dj_rest_auth.urls')),  # this calls that /user endpoint and generates frontend console error
 
 
-    path('api/v1/auth/password/reset/confirm/<uidb64>/<token>/',
-          ApiPasswordResetView.as_view(),
-          name='password_reset_confirm'),
+    #path('api/v1/auth/password/reset/confirm/<uidb64>/<token>/',
+          #ApiPasswordResetView.as_view(),
+          #name='password_reset_confirm'),
     path('api/v1/auth/registration/account-confirm-email/<str:key>/', ConfirmEmailView.as_view(),),
     # path('api/v1/auth/registration/resend-email/'),
     path('api/v1/auth/registration/', include('dj_rest_auth.registration.urls')),
@@ -55,7 +55,9 @@ urlpatterns = [
     path('api/v1/e1t1/', include('sharing.urls')),
     path('api/v1/inquiry/', include('inquiry.urls')),
     path('api/v1/notifications/', include('gebblesalert.urls')),
-
+    
+    # django-rest-passwordreset
+    path('reset/', include('django_rest_passwordreset.urls', namespace='password_reset'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

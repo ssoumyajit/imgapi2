@@ -29,7 +29,7 @@ SECRET_KEY = '$l8%rpz%p*lf4+2o!+#9##-rfajavf)-=0_w$!7zc)+5vj9jm@'
 DEBUG = True
 # CORS_AllOWED_ORIGIN = [ "http://localhost:3000", ]
 # CORS_ALLOW_ALL_ORIGINS = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
@@ -61,7 +61,9 @@ INSTALLED_APPS = [
     'groups',
     'inquiry',
     'gebblesalert',
-    'django_extensions'
+    'django_extensions',
+
+    'django_rest_passwordreset'
 
 ]
 
@@ -120,7 +122,7 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'imgapi2/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -207,6 +209,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 LOGIN_URL = 'http://localhost:8000/api/v1/auth/login'
 # LOGIN_URL = 'https://2t580xq9u5.execute-api.us-east-2.amazonaws.com/dev/api/v1/auth/login'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST = 'smtp.gmail.com'

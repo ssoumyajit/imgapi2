@@ -42,6 +42,9 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
             'email_template_name': 'registration/password_reset_email.html',
         }
 
+# --- for django-rest-passwordreset
+class CustomTokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
 
 
 
